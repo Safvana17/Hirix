@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "nodemon --watch src --ext ts --exec ts-node src/presentation/server.ts",
     "build": "tsc",
-    "start": "node dist/presentation/server.js"
+    "start": "node dist/presentation/server.js",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix"
   },
   "keywords": [],
   "author": "",
@@ -36,9 +38,11 @@
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
     "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
     "nodemon": "^3.1.11",
     "prettier": "^3.8.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0"
   }
 }

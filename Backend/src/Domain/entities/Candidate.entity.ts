@@ -5,7 +5,7 @@ export default class candidateEntity extends userEntity{
     
     subscriptionId?: string;
 
-    constructor(id: string, name: string, email: string, password: string, googleId: string, isVerified: boolean){
-        super(id, name, email, password, userRole.Candidate, googleId, isVerified)
+    constructor(name: string, email: string, password: string, isVerified: boolean, id?: string, googleId?: string){
+        super(name, email, password,isVerified, id, userRole.Candidate, googleId)
     }
 }

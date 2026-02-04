@@ -31,7 +31,7 @@ export class VerifyRegisterCandidateOtpUsecase implements IVerifyRegisterCandida
             throw new Error("OTP expired or invalid")
         }
 
-        const isValid = this.otpService.compare(request.otp, storedOtp)
+        const isValid = await this.otpService.compare(request.otp, storedOtp)
 
         if(!isValid){
             throw new Error('Invalid OTP')

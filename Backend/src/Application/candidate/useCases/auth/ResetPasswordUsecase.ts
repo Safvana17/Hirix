@@ -22,7 +22,7 @@ export class ResetPasswordUsecase implements IResetPasswordUsecase {
         const id = candidate.getId()
         const candidateId = id!;
         const hashedOtp = await this.otpStore.getOtp(candidateId)
-        const isValid = this.otpService.compare(request.otp, hashedOtp!)
+        const isValid = await this.otpService.compare(request.otp, hashedOtp!)
         if(!isValid){
             throw new Error('Invalid OTP')
         }

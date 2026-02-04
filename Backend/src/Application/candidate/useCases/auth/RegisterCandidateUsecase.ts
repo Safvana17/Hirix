@@ -30,7 +30,7 @@ export class registerCandidateUsecase implements ICandidateRegisterUsecase{
         const savedCandidate = await this.candidateRepository.createCandidate(candidate)
 
         const otp = this.otpService.generate()
-        const hashedOtp = this.otpService.hash(otp)
+        const hashedOtp = await this.otpService.hash(otp)
 
         await this.otpStore.saveOtp(savedCandidate.getId()!, hashedOtp, 120)
 

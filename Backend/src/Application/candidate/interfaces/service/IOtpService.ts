@@ -1,5 +1,5 @@
 export interface IOtpService {
     generate(): string;
-    hash(otp: string): string;
-    compare(EnteredOtp: string, hashedOtp: string) : boolean;
+    hash(otp: string): Promise<string>;
+    compare(EnteredOtp: string, hashedOtp: string) : Promise<boolean>;
 }

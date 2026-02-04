@@ -25,7 +25,7 @@ export class ForgotPasswordUsecase implements IForgotPasswordUsecase{
         const candidateId = id!;
 
         const otp = this.otpService.generate()
-        const hashedOtp = this.otpService.hash(otp)
+        const hashedOtp = await this.otpService.hash(otp)
 
         await this.otpStore.saveOtp(candidateId, hashedOtp, 120)
         await this.mailService.sentOtp(candidate.getEmail(), otp)

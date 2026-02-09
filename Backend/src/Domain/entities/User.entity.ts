@@ -8,8 +8,6 @@ export default class userEntity {
     protected role?: userRole
     protected isVerified: boolean;
     protected googleId?: string;
-    protected createdAt: Date;
-    protected updatedAt: Date;
 
 
     protected constructor(name: string, email: string, password: string, isVerified: boolean, id?: string, role?: userRole, googleId?: string){
@@ -20,8 +18,6 @@ export default class userEntity {
         this.role = role;
         this.isVerified = isVerified;
         this.googleId = googleId;
-        this.createdAt = new Date();
-        this.updatedAt = new Date()
     }
 
     public getId(): string | undefined {
@@ -50,5 +46,8 @@ export default class userEntity {
 
     public markAsVerified(): void {
         this.isVerified = true;
+    }
+    public getGoogleId(): string | undefined{
+        return this.googleId;
     }
 }

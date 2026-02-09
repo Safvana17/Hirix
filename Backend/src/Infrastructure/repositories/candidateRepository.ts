@@ -1,6 +1,6 @@
 import candidateEntity from "../../Domain/entities/Candidate.entity";
 import ICandidateRepository from "../../Domain/repositoryInterface/ICandidateRepository";
-import { candidateMapper } from "../database/Mappers/CandidateMapper";
+import { candidateMapper } from "../../Application/Mappers/CandidateMapper";
 import { candidateModel } from "../database/Model/Candidate";
 
 export class candidateRepository implements ICandidateRepository{

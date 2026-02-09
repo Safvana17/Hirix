@@ -11,8 +11,6 @@ export interface ICandidate extends Document {
     googleId: string;
     isBlocked: boolean;
     isVerified: boolean;
-    createdAt: Date;
-    updatedAt: Date;
 }
 
 const candidateSchema: Schema<ICandidate> = new Schema ({

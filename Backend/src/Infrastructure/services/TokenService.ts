@@ -10,7 +10,11 @@ export class TokenService implements ITokenService {
         }
         return jwt.sign(payload,refreshSecret, {expiresIn: jwtConfig.refreshToken.expiresIn})
     }
-
+/**
+ * 
+ * @param payload 
+ * @returns 
+ */
     generateAccessToken(payload: AccessTokenPayload): string {
         const accessSecret = jwtConfig.accessToken.secret
         if(!accessSecret){

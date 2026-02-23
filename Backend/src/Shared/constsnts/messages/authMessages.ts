@@ -8,6 +8,7 @@ export const authMessages = {
         RESET_PASSWORD_OTP_sEND: 'Otp for reset password is send successfully',
         PASSWORD_RESET: 'Password reset successfully',
         TOKEN_REFRESHED: 'Token refreshed successfully',
+        ADMIN_LOGIN_SUCCESS: 'Admin logged in successfully'
     },
     error: {
         CONFLICT: "Email already exist",

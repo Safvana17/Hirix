@@ -3,8 +3,8 @@ import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandid
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { LoginCandidateInputDTO, LoginCandidateOutputDTO } from "../../dtos/LoginCandidateDTO";
-import { IHashService } from "../../interfaces/service/IHashService";
-import { ITokenService } from "../../interfaces/service/ITokenService";
+import { IHashService } from "../../../interface/service/IHashService";
+import { ITokenService } from "../../../interface/service/ITokenService";
 
 export class LoginCandidateUsecase {
     constructor(

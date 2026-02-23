@@ -23,12 +23,16 @@ import { ResendOtpUsecase } from "../../../Application/candidate/useCases/auth/R
 import { CompanyAuthController } from "./company/authController";
 import { RegisterCompanyUsecase } from "../../../Application/company/usecases/RegisterCompanyUsecase";
 import { CompanyRepository } from "../../../Infrastructure/repositories/companyRepository";
+import { AdminAuthController } from "./admin/authController";
+import { AdminLoginUsecase } from "../../../Application/admin/usecases/AdminLoginUsecase";
+import { AdminRepository } from "../../../Infrastructure/repositories/adminRepository";
 // import { GoogleLoginUsecase } from "../../../Application/candidate/useCases/auth/GoogleLoginUsecase";
 // import { GoogleAuthService } from "../../../Infrastructure/services/GoogleAuthService";
 
 
 const iCandidateRepository = new CandidateRepository()
 const iCompanyRepository = new CompanyRepository()
+const iAdminRepository = new AdminRepository()
 const iOtpRepository = new OtpRepository(redisClient)
 
 const iHashService = new HashService()
@@ -94,6 +98,15 @@ const iRegisterCompany = new RegisterCompanyUsecase(
       iHashService,
       iMailService
 )
+
+
+//admin
+
+const iLoginAdmin = new AdminLoginUsecase(
+    iAdminRepository,
+    iHashService,
+    iTokenService
+)
 // const iGoogleLogin = new GoogleLoginUsecase(
 //     iCandidateRepository,
 //     iGoogleAuthService,
@@ -115,4 +128,8 @@ export const iCandidateAuthController = new CandidateAuthController(
 
 export const iCompanyAuthController = new CompanyAuthController(
     iRegisterCompany
+)
+
+export const iAdminAuthController = new AdminAuthController(
+    iLoginAdmin
 )

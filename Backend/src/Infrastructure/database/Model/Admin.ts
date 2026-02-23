@@ -8,6 +8,7 @@ export interface IAdmin extends Document {
     email: string;
     password: string;
     role: userRole;
+    refreshTokens: string[]
     createdAt: Date;
     updatedAt: Date
 }
@@ -30,7 +31,11 @@ const adminSchema: Schema<IAdmin> = new Schema({
         required: true,
         default: userRole.Admin,
         enum: Object.values(userRole)
-    }
+    },
+    refreshToken: {
+        type: [String],
+        default: []
+    },
 },{
     timestamps: true
 })

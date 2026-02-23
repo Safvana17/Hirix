@@ -1,5 +1,5 @@
 import Express from 'express'
-import { iCandidateAuthController, iCompanyAuthController } from '../controllers/factory'
+import { iAdminAuthController, iCandidateAuthController, iCompanyAuthController } from '../controllers/factory'
 const router = Express.Router()
 
 
@@ -16,5 +16,9 @@ router.post('/candidate/refresh', iCandidateAuthController.refreshToken)
 
 //company
 router.post('/company/register', iCompanyAuthController.register)
+
+
+//admin
+router.post('/admin/login', iAdminAuthController.login)
 
 export default router;

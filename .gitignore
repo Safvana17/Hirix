@@ -3,3 +3,5 @@ node_modules/
 Backend/node_modules/
 dist/
 build/
+logs/
+*.log

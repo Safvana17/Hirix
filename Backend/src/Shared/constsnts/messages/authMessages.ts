@@ -26,7 +26,12 @@ export const authMessages = {
         INVALID_REFRESH_TOKEN: 'Invalid refresh token payload',
         ACCESS_TOKEN_EXPIRED: 'Access token is expired',
         //candidate
-        CANDIDATE_ID_NOT_FOUND: 'Candidate id not found'
+        CANDIDATE_ID_NOT_FOUND: 'Candidate id not found',
+        CANDIDATE_ALREADY_EXISTS: 'Candidate with this email already exists',
+
+
+        //company
+        COMPANY_ALREADY_EXISTS: 'Company with this email already exists'
 
     }
 }

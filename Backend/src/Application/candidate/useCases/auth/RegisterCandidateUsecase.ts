@@ -1,11 +1,14 @@
 import candidateEntity from "../../../../Domain/entities/candidate.entity";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
 import { RegisterCandidateInputDTO, RegisterCandidateOutputDTO } from "../../dtos/RegisterCandidateDTO";
-import { IOtpService } from "../../interfaces/service/IOtpService";
-import { IHashService } from "../../interfaces/service/IHashService";
-import { IMailService } from "../../interfaces/service/IMailService";
-import { IOtpStore } from "../../interfaces/service/IOtpStore";
+import { IOtpService } from "../../../interface/service/IOtpService"
+import { IHashService } from "../../../interface/service/IHashService"
+import { IMailService } from "../../../interface/service/IMailService";
+import { IOtpStore } from "../../../interface/service/IOtpStore";
 import { ICandidateRegisterUsecase } from "../../interfaces/auth/ICandidateRegisterUsecase";
+import { AppError } from "../../../../Domain/errors/AppError";
+import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { statusCode } from "../../../../Shared/Enumes/statusCode";
 
 export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
     constructor(
@@ -21,7 +24,7 @@ export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
         const userExist = await this.candidateRepository.findByEmail(request.email)
 
         if(userExist){
-            throw new Error('User with this email already exists!')
+            throw new AppError(authMessages.error.CANDIDATE_ALREADY_EXISTS, statusCode.CONFLICT)
         }
 
         const hashedPassword = await this.hashService.hash(request.password)

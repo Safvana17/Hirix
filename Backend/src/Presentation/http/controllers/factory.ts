@@ -1,6 +1,6 @@
 import { redisClient } from "../../../Infrastructure/config/redis.config";
 //controllers
-import { AuthController } from "./candidate/authController";
+import { CandidateAuthController } from "./candidate/authController";
 
 //use case
 import { RegisterCandidateUsecase } from "../../../Application/candidate/useCases/auth/RegisterCandidateUsecase";
@@ -20,11 +20,15 @@ import { OtpService } from "../../../Infrastructure/services/OtpService";
 import { TokenService } from "../../../Infrastructure/services/TokenService";
 import { MailService } from "../../../Infrastructure/services/MailService";
 import { ResendOtpUsecase } from "../../../Application/candidate/useCases/auth/ResendOtpUsecase";
+import { CompanyAuthController } from "./company/authController";
+import { RegisterCompanyUsecase } from "../../../Application/company/usecases/RegisterCompanyUsecase";
+import { CompanyRepository } from "../../../Infrastructure/repositories/companyRepository";
 // import { GoogleLoginUsecase } from "../../../Application/candidate/useCases/auth/GoogleLoginUsecase";
 // import { GoogleAuthService } from "../../../Infrastructure/services/GoogleAuthService";
 
 
 const iCandidateRepository = new CandidateRepository()
+const iCompanyRepository = new CompanyRepository()
 const iOtpRepository = new OtpRepository(redisClient)
 
 const iHashService = new HashService()
@@ -80,13 +84,23 @@ const iRefreshToken = new RefreshTokenUsecase (
     iCandidateRepository
 )
 
+
+//company
+
+const iRegisterCompany = new RegisterCompanyUsecase(
+      iCompanyRepository,
+      iOtpService,
+      iOtpRepository,
+      iHashService,
+      iMailService
+)
 // const iGoogleLogin = new GoogleLoginUsecase(
 //     iCandidateRepository,
 //     iGoogleAuthService,
 //     iTokenService
 // )
 
-export const iAuthController = new AuthController(
+export const iCandidateAuthController = new CandidateAuthController(
     iRegisterCandidate,
     iVerifyRegisterCandidate,
     iResendOtp,
@@ -97,4 +111,8 @@ export const iAuthController = new AuthController(
     iHashService,
     iRefreshToken
     // iGoogleLogin
+)
+
+export const iCompanyAuthController = new CompanyAuthController(
+    iRegisterCompany
 )

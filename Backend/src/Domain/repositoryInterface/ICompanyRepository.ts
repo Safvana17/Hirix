@@ -4,4 +4,5 @@ import { IBaseRepository } from "./IBaseRepository";
 export default interface ICompanyRepository extends IBaseRepository <CompanyEntity> {
     findByEmail(email: string): Promise<CompanyEntity | null>;
     updatePassword(id: string, hashedPassword: string): Promise<void>;
+    updateToken(id: string, token: string): Promise<void>
 }

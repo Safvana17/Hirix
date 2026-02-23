@@ -16,13 +16,13 @@ import { IResetPasswordUsecase } from "../../../../Application/candidate/interfa
 import { ForgotPasswordInputDTO } from "../../../../Application/candidate/dtos/ForgotPasswordDTO";
 import { ResetPasswordInputDTO } from "../../../../Application/candidate/dtos/ResetPasswordDTO";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
-import { IHashService } from "../../../../Application/candidate/interfaces/service/IHashService";
+import { IHashService } from "../../../../Application/interface/service/IHashService";
 import { IRefreshTokenUsecase } from "../../../../Application/candidate/interfaces/auth/IRefreshTokenUsecase";
 import { RefreshTokenInputDTO } from "../../../../Application/candidate/dtos/RefreshTokenDTO";
 // import { IGoogleLoginUsecase } from "../../../../Application/candidate/interfaces/auth/IGoogleLoginUsecase";
 
 
-export class AuthController {
+export class CandidateAuthController {
     constructor(
         private registerUsecase: ICandidateRegisterUsecase,
         private verifyOtp: IVerifyRegisterCandidate,
@@ -55,9 +55,9 @@ export class AuthController {
 
             await this.registerUsecase.execute(payload)
           
-            res.status(statusCode.CREATED).json({
+            res.status(statusCode.OK).json({
                 success: true,
-                message: authMessages.success.CANDIDATE_REGISTER_SUCCESS
+                message: authMessages.success.OTP_SEND_SUCCESS
             })
         } catch (error) {
             next(error)

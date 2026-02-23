@@ -17,6 +17,8 @@ export interface ICompany extends Document {
     country: string;
     state: string;
     city: string;
+    refreshToken: string[];
+    isVerified: boolean;
     pinCode: string;
     createdAt: Date;
     updatedAt: Date;
@@ -68,6 +70,14 @@ const companySchema: Schema<ICompany> = new Schema({
     },
     pinCode: {
         type: String
+    },
+    refreshToken: {
+        type: [String],
+        default: []
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true

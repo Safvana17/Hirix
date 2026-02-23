@@ -6,7 +6,8 @@ export const authMessages = {
         COMPANY_LOGIN_SUCCESS: 'Company logges in successfully',
         OTP_SEND_SUCCESS: 'OTP is sent to the email',
         RESET_PASSWORD_OTP_sEND: 'Otp for reset password is send successfully',
-        PASSWORD_RESET: 'Password reset successfully'
+        PASSWORD_RESET: 'Password reset successfully',
+        TOKEN_REFRESHED: 'Token refreshed successfully',
     },
     error: {
         CONFLICT: "Email already exist",
@@ -21,7 +22,9 @@ export const authMessages = {
         OTP_EXPIRED: 'Otp expired',
         INVALID_OTP: 'Invalid otp',
         EMAIL_NOT_FOUND: 'Email not found',
-
+        REFRESH_TOKEN_NOT_FOUND: 'Refresh token is missing',
+        INVALID_REFRESH_TOKEN: 'Invalid refresh token payload',
+        ACCESS_TOKEN_EXPIRED: 'Access token is expired',
         //candidate
         CANDIDATE_ID_NOT_FOUND: 'Candidate id not found'
 

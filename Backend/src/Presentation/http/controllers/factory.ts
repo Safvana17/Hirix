@@ -8,7 +8,7 @@ import { VerifyRegisterCandidateOtpUsecase } from "../../../Application/candidat
 import { ForgotPasswordUsecase  } from "../../../Application/candidate/useCases/auth/ForgotPasswordUsecase";
 import { ResetPasswordUsecase } from "../../../Application/candidate/useCases/auth/ResetPasswordUsecase";
 import { LoginCandidateUsecase } from "../../../Application/candidate/useCases/auth/LoginCandidateUsecase";
-
+import { RefreshTokenUsecase } from "../../../Application/candidate/useCases/auth/RefreshTokenUsecase";
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidateRepository";
 import { OtpRepository } from "../../../Infrastructure/services/OtpStore";
@@ -75,6 +75,11 @@ const iResetPassword = new ResetPasswordUsecase(
     iHashService
 )
 
+const iRefreshToken = new RefreshTokenUsecase (
+    iTokenService,
+    iCandidateRepository
+)
+
 // const iGoogleLogin = new GoogleLoginUsecase(
 //     iCandidateRepository,
 //     iGoogleAuthService,
@@ -89,5 +94,7 @@ export const iAuthController = new AuthController(
     iForgotPassword,
     iResetPassword,
     iCandidateRepository,
+    iHashService,
+    iRefreshToken
     // iGoogleLogin
 )

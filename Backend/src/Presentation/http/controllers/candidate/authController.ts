@@ -6,7 +6,7 @@ import { IVerifyRegisterCandidate } from "../../../../Application/candidate/inte
 import { RegisterCandidateInputDTO } from "../../../../Application/candidate/dtos/RegisterCandidateDTO";
 import { forgotPasswordSchema, otpSchema, registerSchema, resendOtpSchema, resetPasswordSchema } from "../../validators/registerValidator";
 import { verifyRegisterCandidateOtpInputDTO } from "../../../../Application/candidate/dtos/VerifyRegisterCandidateOtpDTO";
-import { loginSchema } from "../../validators/loginValidator";
+import { loginSchema, refreshTokenSchema } from "../../validators/loginValidator";
 import { LoginCandidateInputDTO } from "../../../../Application/candidate/dtos/LoginCandidateDTO";
 import { ICandidateLoginUsecase } from "../../../../Application/candidate/interfaces/auth/ICandidateLoginUsecase";
 import { IResendOtpUsecase } from "../../../../Application/candidate/interfaces/auth/IResendOtpUsecase";
@@ -16,9 +16,10 @@ import { IResetPasswordUsecase } from "../../../../Application/candidate/interfa
 import { ForgotPasswordInputDTO } from "../../../../Application/candidate/dtos/ForgotPasswordDTO";
 import { ResetPasswordInputDTO } from "../../../../Application/candidate/dtos/ResetPasswordDTO";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
+import { IHashService } from "../../../../Application/candidate/interfaces/service/IHashService";
+import { IRefreshTokenUsecase } from "../../../../Application/candidate/interfaces/auth/IRefreshTokenUsecase";
+import { RefreshTokenInputDTO } from "../../../../Application/candidate/dtos/RefreshTokenDTO";
 // import { IGoogleLoginUsecase } from "../../../../Application/candidate/interfaces/auth/IGoogleLoginUsecase";
-// import { candidateModel } from "../../../../Infrastructure/database/Model/candidate";
-// import { IOtpService } from "../../../../Application/candidate/interfaces/service/IOtpService";
 
 
 export class AuthController {
@@ -30,6 +31,8 @@ export class AuthController {
         private forgotPasswordUsecase: IForgotPasswordUsecase,
         private resetPasswordUsecase: IResetPasswordUsecase,
         private candidateRepository: ICandidateRepository,
+        private hashService: IHashService,
+        private refreshTokenUsecase: IRefreshTokenUsecase
         // private googleLoginUsecase: IGoogleLoginUsecase
         
     ) {}
@@ -106,7 +109,8 @@ export class AuthController {
             const payload: LoginCandidateInputDTO = loginSchema.parse(req.body)
             const {refreshToken, accessToken, candidate} = await this.loginUsecase.execute(payload)
 
-            await this.candidateRepository.updateToken(candidate.id, refreshToken)
+            const hashedToken = this.hashService.hashToken(refreshToken)
+            await this.candidateRepository.updateToken(candidate.id, hashedToken)
 
             res.cookie('refershToken', refreshToken, {
                 httpOnly: true,
@@ -129,6 +133,12 @@ export class AuthController {
                 candidate: candidate,
                 message: authMessages.success.COMPANY_LOGIN_SUCCESS
             })
+
+            res.status(statusCode.OK).json({
+                success: true,
+                message: authMessages.success.TOKEN_REFRESHED
+            })
+
         } catch (error) {
             next(error)
         }
@@ -173,6 +183,38 @@ export class AuthController {
         }
     }
 
+    refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const parsed = refreshTokenSchema.parse(req.body)
+            const payload: RefreshTokenInputDTO = {
+                token: parsed.token
+            }
+
+            const tokens = this.refreshTokenUsecase.execute(payload)
+            
+            const hashedRefreshToken = this.hashService.hashToken((await tokens).refreshToken)
+            await this.candidateRepository.updateToken((await tokens).candidateId, hashedRefreshToken)
+
+            res.cookie('refreshToken', (await tokens).refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV ==='production' ? 'none' : 'lax',
+                maxAge: 7 * 24 * 60 * 60 * 1000,
+                path: '/'
+            })
+
+            res.cookie('accessToken', (await tokens).accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: 15 * 60 * 1000,
+                path: '/'
+            })
+
+        } catch (error) {
+            next(error)
+        }
+    }
     // googleLogin = async (req: Request, res: Response, next: NextFunction) =>{
     //     try {
     //        const parsed = 

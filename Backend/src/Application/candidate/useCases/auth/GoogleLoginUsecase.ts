@@ -18,6 +18,7 @@ export class GoogleLoginUsecase implements IGoogleLoginUsecase{
 
     async execute(token: string, role: userRole): Promise<LoginCandidateOutputDTO> {
         logger.info(`userRole: ${role}`)
+        
         const googleCandidate = await this.googleAuthService.getUserInfo(token)
         const candidate = await this.candidateRepository.findByEmail(googleCandidate.email)
         if(!candidate || !candidate.getId() || !candidate.getRole()){

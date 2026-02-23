@@ -18,3 +18,10 @@ export const googleLoginSchema = z.object({
         .trim()
         .min(1, 'Token is missing')
 })
+
+export const refreshTokenSchema = z.object({
+    token: z
+       .string()
+       .trim()
+       .min(1, 'Refresh token is missing')
+})

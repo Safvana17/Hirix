@@ -1,5 +1,6 @@
 import { IHashService } from "../../Application/candidate/interfaces/service/IHashService";
 import bcrypt from 'bcrypt'
+import crypto from 'crypto'
 
 export class HashService implements IHashService{
     async hash(password: string): Promise<string> {
@@ -11,7 +12,7 @@ export class HashService implements IHashService{
         return await bcrypt.compare(password, hashedPassword)
     }
 
-    // async hashToken(token: string): Promise<string> {
-    //     return await crypto.createHash("sha256").update(token).digest("hex")
-    // }
+    hashToken(token: string):string {
+        return crypto.createHash('sha256').update(token).digest("hex")
+    }
 }

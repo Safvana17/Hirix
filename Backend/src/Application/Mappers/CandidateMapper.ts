@@ -9,7 +9,8 @@ export class candidateMapper {
             doc.password,
             doc.isVerified,
             doc._id.toString(),
-            doc.googleId
+            doc.googleId,
+            doc.refreshToken ?? []
         )
         return candidate
     }
@@ -21,7 +22,8 @@ export class candidateMapper {
             // password: entity.getPassword(),
             role: entity.getRole(),
             googleId: entity.getGoogleId?.(),
-            isVerified: entity.isUserVerified()
+            isVerified: entity.isUserVerified(),
+            refreshTokens: entity.getRefreshToken()
         }
     }
 }

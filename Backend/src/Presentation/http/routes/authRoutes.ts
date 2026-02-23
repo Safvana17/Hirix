@@ -10,6 +10,8 @@ router.post('/candidate/resendotp', iAuthController.resendOtp)
 router.post('/candidate/login', iAuthController.login)
 router.post('/candidate/forgotpassword', iAuthController.forgotPassword)
 router.post('/candidate/resetpassword', iAuthController.resetPassword)
+router.post('/candidate/refresh', iAuthController.refreshToken)
+// router.post('/candidate/google-login', iAuthController.googleLogin)
 
 
 

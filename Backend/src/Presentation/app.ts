@@ -1,14 +1,18 @@
 import express from 'express';
 import cors from 'cors';
+import cookieparser from 'cookie-parser'
 import { connectDB } from '../Infrastructure/config/mongo.config';
 import routes from './http/routes/index'
 import { logger } from '../utils/logging/loger';
+import { errorHandler } from './http/middlewares/errorHandler';
 
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieparser())
+app.use(express.urlencoded({extended: true}))
 
 connectDB().catch((err) => {
     logger.error('Database connection failed', err)
@@ -21,5 +25,6 @@ app.get('/test', (req, res) => {
 });
 
 app.use('/', routes)
+app.use(errorHandler)
 
 export default app;

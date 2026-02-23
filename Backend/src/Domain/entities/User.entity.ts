@@ -8,9 +8,10 @@ export default class UserEntity {
     protected role?: userRole
     protected isVerified: boolean;
     protected googleId?: string;
+    protected refreshTokens?: string[]
 
 
-    protected constructor(name: string, email: string, password: string, isVerified: boolean, id?: string, role?: userRole, googleId?: string){
+    protected constructor(name: string, email: string, password: string, isVerified: boolean, id?: string, role?: userRole, googleId?: string, refreshToken: string[] = []){
         this.id = id;
         this.name = name;
         this.email = email;
@@ -18,6 +19,7 @@ export default class UserEntity {
         this.role = role;
         this.isVerified = isVerified;
         this.googleId = googleId;
+        this.refreshTokens = refreshToken
     }
 
     public getId(): string | undefined {
@@ -49,5 +51,12 @@ export default class UserEntity {
     }
     public getGoogleId(): string | undefined{
         return this.googleId;
+    }
+    public getRefreshToken(): string[] | undefined {
+        return this.refreshTokens? [...this.refreshTokens]: undefined
+    }
+
+    public hasRefreshToken(token: string): boolean {
+        return this.refreshTokens? this.refreshTokens.includes(token) : false
     }
 }

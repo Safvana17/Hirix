@@ -32,7 +32,7 @@ export class CandidateRepository extends BaseRepository <CandidateEntity, ICandi
 
     async updateToken(id: string, token: string): Promise<void> {
         await candidateModel.findByIdAndUpdate(id,
-            {$set: {refreshToken: token}}
+            {$push: {refreshToken: token}}
         )
     }
 

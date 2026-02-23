@@ -1,11 +1,11 @@
 import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
-import { ResendOtpInputDTO, ResendOtpOutputDTO } from "../../dtos/resendOtpDTO";
+import { ResendOtpInputDTO, ResendOtpOutputDTO } from "../../dtos/ResendOtpDTO";
 import { IResendOtpUsecase } from "../../interfaces/auth/IResendOtpUsecase";
 import { IMailService } from "../../interfaces/service/IMailService";
 import { IOtpService } from "../../interfaces/service/IOtpService";
 import { IOtpStore } from "../../interfaces/service/IOtpStore";
 
-export class resendOtpUsecase implements IResendOtpUsecase {
+export class ResendOtpUsecase implements IResendOtpUsecase {
     constructor(
         private candidateRepository: ICandidateRepository,
         private otpService: IOtpService,

@@ -1,5 +1,6 @@
-import adminEntity from "../entities/Admin.entity";
+import AdminEntity from "../entities/admin.entity";
+import { IBaseRepository } from "./IBaseRepository";
 
-export default interface IAdminRepository {
-    findByEmail(email: string): Promise<adminEntity | null>
+export default interface IAdminRepository extends IBaseRepository <AdminEntity> {
+    findByEmail(email: string): Promise<AdminEntity | null>
 }

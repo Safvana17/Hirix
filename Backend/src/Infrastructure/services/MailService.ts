@@ -3,7 +3,7 @@ import { otpEmailTemplate } from "../emailTemplates/OtpTemplate";
 import { mailTransporter } from "../config/mail.config";
 import { env } from "../config/env";
 
-export class mailService implements IMailService{
+export class MailService implements IMailService{
     async sentOtp(email: string, otp: string): Promise<void> {
        
         await mailTransporter.sendMail({

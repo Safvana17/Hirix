@@ -1,35 +1,47 @@
+import { AppError } from "../../../../Domain/errors/AppError";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
-import { LoginCandidateInputDTO, LoginCandidateOutputDTO } from "../../dtos/loginCandidateDTO";
+import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { LoginCandidateInputDTO, LoginCandidateOutputDTO } from "../../dtos/LoginCandidateDTO";
 import { IHashService } from "../../interfaces/service/IHashService";
 import { ITokenService } from "../../interfaces/service/ITokenService";
 
-export class loginCandidateUsecase {
+export class LoginCandidateUsecase {
     constructor(
         private candidateRepository: ICandidateRepository,
         private tokenService: ITokenService,
         private hashService: IHashService
     ) {}
 
+    /**
+     * 
+     * @param request - login credentials (email, password)
+     * @returns - Authentication result with tokens and user info
+     */
     async execute(request: LoginCandidateInputDTO): Promise<LoginCandidateOutputDTO> {
 
         const candidate = await this.candidateRepository.findByEmail(request.email)
         if(!candidate){
-            throw new Error('Candidate not found')
+            throw new AppError(authMessages.error.CANDIDATE_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
         const isValidPassword = await this.hashService.compare(request.password, candidate.getPassword())
         if(!isValidPassword){
-            throw new Error('Invalid credentials')
+            throw new AppError(authMessages.error.INVALID_PASSWORD, statusCode.UNAUTHORIZED)
         }
 
         const id = candidate.getId()
         const candidateId = id!;
         if(!id){
-            throw new Error('user id is not found')
+            throw new AppError(authMessages.error.CANDIDATE_ID_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
         const refreshToken = this.tokenService.generateRefreshToken({candidateId})
-        const accessToken = this.tokenService.generateAccessToken({candidateId, email: candidate.getRole(), role: candidate.getRole()})
+        const accessToken = this.tokenService.generateAccessToken({candidateId, email: candidate.getEmail(), role: candidate.getRole()})
+
+        // const hashedRefreshToken = this.hashService.hashToken(refreshToken)
+        // await this.candidateRepository.updateToken(candidateId, refreshToken)
+
 
         return {refreshToken, accessToken, candidate: {
             id: candidateId,

@@ -16,7 +16,9 @@ export default [
 
     rules: {
       // General
-      'no-console': 'off',
+      'no-console': ['error', {
+        allow: ['warn', 'error']
+      }],
 
       // TypeScript rules
       '@typescript-eslint/no-unused-vars': ['error'],

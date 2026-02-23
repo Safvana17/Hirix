@@ -9,6 +9,7 @@ export interface ICandidate extends Document {
     password: string;
     role: userRole;
     googleId: string;
+    refreshToken: string;
     isBlocked: boolean;
     isVerified: boolean;
 }
@@ -39,6 +40,10 @@ const candidateSchema: Schema<ICandidate> = new Schema ({
     isBlocked: {
         type: Boolean,
         default: false
+    },
+    refreshToken: {
+        type: String,
+        default: ""
     },
     isVerified: {
         type: Boolean,

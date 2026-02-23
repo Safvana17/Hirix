@@ -1,5 +1,5 @@
 import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
-import { ResetPasswordInputDTO, ResetPasswordOutputDTO } from "../../dtos/resetPasswordDTO";
+import { ResetPasswordInputDTO, ResetPasswordOutputDTO } from "../../dtos/ResetPasswordDTO";
 import { IResetPasswordUsecase } from "../../interfaces/auth/IResetPasswordUsecase";
 import { IHashService } from "../../interfaces/service/IHashService";
 import { IOtpService } from "../../interfaces/service/IOtpService";
@@ -29,7 +29,7 @@ export class ResetPasswordUsecase implements IResetPasswordUsecase {
 
         const changedPassword = await this.hashService.hash(request.newPassword)
         await this.candidateRepository.updatePassword(candidateId,changedPassword)
-        await this.candidateRepository.save(candidate)
+        // await this.candidateRepository.save(candidate)
 
         await this.otpStore.deleteOtp(candidateId)
 

@@ -1,9 +1,9 @@
-import candidateEntity from "../../Domain/entities/Candidate.entity";
-import { ICandidate } from "../../Infrastructure/database/Model/Candidate";
+import CandidateEntity from "../../Domain/entities/candidate.entity";
+import { ICandidate } from "../../Infrastructure/database/Model/candidate";
 
 export class candidateMapper {
-    static toEntity(doc: ICandidate): candidateEntity {
-        const candidate = new candidateEntity(
+    static toEntity(doc: ICandidate): CandidateEntity {
+        const candidate = new CandidateEntity(
             doc.name,
             doc.email,
             doc.password,
@@ -14,11 +14,11 @@ export class candidateMapper {
         return candidate
     }
 
-    static toDocument(entity: candidateEntity){
+    static toDocument(entity: CandidateEntity){
         return {
             name: entity.getName(),
             email: entity.getEmail(),
-            password: entity.getPassword(),
+            // password: entity.getPassword(),
             role: entity.getRole(),
             googleId: entity.getGoogleId?.(),
             isVerified: entity.isUserVerified()

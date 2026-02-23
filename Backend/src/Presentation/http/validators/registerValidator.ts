@@ -43,3 +43,31 @@ export const resendOtpSchema = z.object({
          .min(1, 'Email is required')
          .email('Invalid email')
 })
+
+export const forgotPasswordSchema = z.object({
+    email: z
+          .string()
+          .trim()
+          .min(1, 'Email is required')
+          .email('Invalid email')
+})
+
+export const resetPasswordSchema = z.object({
+    email: z
+         .string()
+         .trim()
+         .min(1, 'Email is required')
+         .email('Invalid email'),
+    otp: z
+         .string()
+         .trim()
+         .regex(/^\d{6}$/, 'OTP must contain only numbers')
+         .min(6, 'OTP must be exactly 6 gigits'),
+    newPassword: z
+          .string()
+          .trim()
+          .min(6, 'Password must contain atleast 6 characters')
+          .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@$%&*?])[a-zA-Z\d!@$%&*?]{6,}$/),
+    confirmPassword: z
+          .string()
+})

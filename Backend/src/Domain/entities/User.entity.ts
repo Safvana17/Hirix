@@ -1,7 +1,7 @@
 import userRole from "../enums/userRole.enum";
 
-export default class userEntity {
-    protected id?: string;
+export default class UserEntity {
+    id?: string;
     protected name: string;
     protected email: string;
     protected password: string

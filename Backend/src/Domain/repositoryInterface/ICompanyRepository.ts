@@ -1,8 +1,7 @@
-import companyEntity from "../entities/Company.entity";
+import CompanyEntity from "../entities/company.entity";
+import { IBaseRepository } from "./IBaseRepository";
 
-export default interface ICompanyRepository {
-    createCompany(company: companyEntity): Promise<companyEntity>;
-    findByEmail(email: string): Promise<companyEntity | null>;
-    findById(id: string): Promise<companyEntity | null>;
+export default interface ICompanyRepository extends IBaseRepository <CompanyEntity> {
+    findByEmail(email: string): Promise<CompanyEntity | null>;
     updatePassword(id: string, hashedPassword: string): Promise<void>;
 }

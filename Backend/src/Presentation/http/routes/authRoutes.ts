@@ -8,6 +8,8 @@ router.post('/candidate/register', iAuthController.register)
 router.post('/candidate/verifyotp', iAuthController.VerifyOtp)
 router.post('/candidate/resendotp', iAuthController.resendOtp)
 router.post('/candidate/login', iAuthController.login)
+router.post('/candidate/forgotpassword', iAuthController.forgotPassword)
+router.post('/candidate/resetpassword', iAuthController.resetPassword)
 
 
 

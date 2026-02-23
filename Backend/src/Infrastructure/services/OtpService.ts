@@ -1,10 +1,11 @@
 import { IOtpService } from "../../Application/candidate/interfaces/service/IOtpService";
 import bcrypt from 'bcrypt'
+import { logger } from "../../utils/logging/loger";
 
 export class OtpService implements IOtpService{
     generate(): string {
         const otp = Math.floor(100000 + Math.random() * 900000)
-        console.log('otp is:', otp)
+        logger.info(`your otp is: ${otp}`)
         return otp.toString()
     }
 

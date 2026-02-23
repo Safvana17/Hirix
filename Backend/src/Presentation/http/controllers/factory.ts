@@ -1,33 +1,37 @@
 import { redisClient } from "../../../Infrastructure/config/redis.config";
 //controllers
-import { authController } from "./candidate/authController";
+import { AuthController } from "./candidate/authController";
 
 //use case
-import { registerCandidateUsecase } from "../../../Application/candidate/useCases/auth/RegisterCandidateUsecase";
+import { RegisterCandidateUsecase } from "../../../Application/candidate/useCases/auth/RegisterCandidateUsecase";
 import { VerifyRegisterCandidateOtpUsecase } from "../../../Application/candidate/useCases/auth/VerifyRegisterCandidateOtpUsecase";
-
+import { ForgotPasswordUsecase  } from "../../../Application/candidate/useCases/auth/ForgotPasswordUsecase";
+import { ResetPasswordUsecase } from "../../../Application/candidate/useCases/auth/ResetPasswordUsecase";
+import { LoginCandidateUsecase } from "../../../Application/candidate/useCases/auth/LoginCandidateUsecase";
 
 //repositories
-import { candidateRepository } from "../../../Infrastructure/repositories/candidateRepository";
-import { otpRepository } from "../../../Infrastructure/services/OtpStore";
+import { CandidateRepository } from "../../../Infrastructure/repositories/candidateRepository";
+import { OtpRepository } from "../../../Infrastructure/services/OtpStore";
 
 
 //services
-import { hashService } from "../../../Infrastructure/services/HashService";
+import { HashService } from "../../../Infrastructure/services/HashService";
 import { OtpService } from "../../../Infrastructure/services/OtpService";
 import { TokenService } from "../../../Infrastructure/services/TokenService";
-import { mailService } from "../../../Infrastructure/services/MailService";
-import { loginCandidateUsecase } from "../../../Application/candidate/useCases/auth/LoginCandidateUsecase";
-import { resendOtpUsecase } from "../../../Application/candidate/useCases/auth/ResendOtpUsecase";
+import { MailService } from "../../../Infrastructure/services/MailService";
+import { ResendOtpUsecase } from "../../../Application/candidate/useCases/auth/ResendOtpUsecase";
+// import { GoogleLoginUsecase } from "../../../Application/candidate/useCases/auth/GoogleLoginUsecase";
+// import { GoogleAuthService } from "../../../Infrastructure/services/GoogleAuthService";
 
 
-const iCandidateRepository = new candidateRepository()
-const iOtpRepository = new otpRepository(redisClient)
+const iCandidateRepository = new CandidateRepository()
+const iOtpRepository = new OtpRepository(redisClient)
 
-const iHashService = new hashService()
+const iHashService = new HashService()
 const iOtpService = new OtpService()
 const iTokenService = new TokenService()
-const iMailService = new mailService()
+const iMailService = new MailService()
+// const iGoogleAuthService = new GoogleAuthService()
 
 
 const iVerifyRegisterCandidate = new VerifyRegisterCandidateOtpUsecase(
@@ -36,7 +40,7 @@ const iVerifyRegisterCandidate = new VerifyRegisterCandidateOtpUsecase(
     iOtpService,
     iTokenService
 )
-const iRegisterCandidate = new registerCandidateUsecase(
+const iRegisterCandidate = new RegisterCandidateUsecase(
     iCandidateRepository,
     iHashService,
     iOtpService,
@@ -44,23 +48,46 @@ const iRegisterCandidate = new registerCandidateUsecase(
     iMailService
 )
 
-const iResendOtp = new resendOtpUsecase(
+const iResendOtp = new ResendOtpUsecase(
     iCandidateRepository,
     iOtpService,
     iOtpRepository,
     iMailService
 )
 
-const iLoginCandidate = new loginCandidateUsecase(
+const iLoginCandidate = new LoginCandidateUsecase(
     iCandidateRepository,
     iTokenService,
     iHashService
 )
 
+const iForgotPassword = new ForgotPasswordUsecase(
+    iCandidateRepository,
+    iOtpService,
+    iOtpRepository,
+    iMailService
+)
 
-export const iAuthController = new authController(
+const iResetPassword = new ResetPasswordUsecase(
+    iCandidateRepository,
+    iOtpService,
+    iOtpRepository,
+    iHashService
+)
+
+// const iGoogleLogin = new GoogleLoginUsecase(
+//     iCandidateRepository,
+//     iGoogleAuthService,
+//     iTokenService
+// )
+
+export const iAuthController = new AuthController(
     iRegisterCandidate,
     iVerifyRegisterCandidate,
     iResendOtp,
-    iLoginCandidate
+    iLoginCandidate,
+    iForgotPassword,
+    iResetPassword,
+    iCandidateRepository,
+    // iGoogleLogin
 )

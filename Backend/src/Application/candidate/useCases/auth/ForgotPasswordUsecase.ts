@@ -1,9 +1,10 @@
 import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
-import { ForgotPasswordInputDTO, ForgotPasswordOutputDTO } from "../../dtos/forgotPasswordDTO";
+import { ForgotPasswordInputDTO, ForgotPasswordOutputDTO } from "../../dtos/ForgotPasswordDTO";
 import { IForgotPasswordUsecase } from "../../interfaces/auth/IForgotPasswordUsecase";
 import { IMailService } from "../../interfaces/service/IMailService";
 import { IOtpService } from "../../interfaces/service/IOtpService";
 import { IOtpStore } from "../../interfaces/service/IOtpStore";
+
 
 export class ForgotPasswordUsecase implements IForgotPasswordUsecase{
     constructor(

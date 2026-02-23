@@ -1,6 +1,6 @@
 import userRole from "../enums/userRole.enum";
 
-export default class adminEntity {
+export default class AdminEntity {
     id: string;
     name: string;
     email: string;

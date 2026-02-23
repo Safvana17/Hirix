@@ -1,7 +1,7 @@
 import Redis from 'ioredis'
 import { IOtpStore } from '../../Application/candidate/interfaces/service/IOtpStore'
 
-export class otpRepository implements IOtpStore{
+export class OtpRepository implements IOtpStore{
     constructor(private redis: Redis) {}
 
     async saveOtp(key: string, otp: string, ttlSeconds: number): Promise<void> {

@@ -3,26 +3,44 @@ import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { ICandidateRegisterUsecase } from "../../../../Application/candidate/interfaces/auth/ICandidateRegisterUsecase";
 import { IVerifyRegisterCandidate } from "../../../../Application/candidate/interfaces/auth/IVerifyRegisterCandidate";
-import { RegisterCandidateInputDTO } from "../../../../Application/candidate/dtos/registerCandidateDTO";
-import { otpSchema, registerSchema, resendOtpSchema } from "../../validators/registerValidator";
-import { verifyRegisterCandidateOtpInputDTO } from "../../../../Application/candidate/dtos/verifyRegisterCandidateOtpDTO";
+import { RegisterCandidateInputDTO } from "../../../../Application/candidate/dtos/RegisterCandidateDTO";
+import { forgotPasswordSchema, otpSchema, registerSchema, resendOtpSchema, resetPasswordSchema } from "../../validators/registerValidator";
+import { verifyRegisterCandidateOtpInputDTO } from "../../../../Application/candidate/dtos/VerifyRegisterCandidateOtpDTO";
 import { loginSchema } from "../../validators/loginValidator";
-import { LoginCandidateInputDTO } from "../../../../Application/candidate/dtos/loginCandidateDTO";
+import { LoginCandidateInputDTO } from "../../../../Application/candidate/dtos/LoginCandidateDTO";
 import { ICandidateLoginUsecase } from "../../../../Application/candidate/interfaces/auth/ICandidateLoginUsecase";
 import { IResendOtpUsecase } from "../../../../Application/candidate/interfaces/auth/IResendOtpUsecase";
-import { ResendOtpInputDTO } from "../../../../Application/candidate/dtos/resendOtpDTO";
+import { ResendOtpInputDTO } from "../../../../Application/candidate/dtos/ResendOtpDTO";
+import { IForgotPasswordUsecase } from "../../../../Application/candidate/interfaces/auth/IForgotPasswordUsecase";
+import { IResetPasswordUsecase } from "../../../../Application/candidate/interfaces/auth/IResetPasswordUsecase";
+import { ForgotPasswordInputDTO } from "../../../../Application/candidate/dtos/ForgotPasswordDTO";
+import { ResetPasswordInputDTO } from "../../../../Application/candidate/dtos/ResetPasswordDTO";
+import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
+// import { IGoogleLoginUsecase } from "../../../../Application/candidate/interfaces/auth/IGoogleLoginUsecase";
+// import { candidateModel } from "../../../../Infrastructure/database/Model/candidate";
 // import { IOtpService } from "../../../../Application/candidate/interfaces/service/IOtpService";
 
 
-export class authController {
+export class AuthController {
     constructor(
         private registerUsecase: ICandidateRegisterUsecase,
         private verifyOtp: IVerifyRegisterCandidate,
         private resendOtpUsecase: IResendOtpUsecase,
-        private loginUsecase: ICandidateLoginUsecase
+        private loginUsecase: ICandidateLoginUsecase,
+        private forgotPasswordUsecase: IForgotPasswordUsecase,
+        private resetPasswordUsecase: IResetPasswordUsecase,
+        private candidateRepository: ICandidateRepository,
+        // private googleLoginUsecase: IGoogleLoginUsecase
         
     ) {}
 
+
+    /**
+     * 
+     * @param req candidate register request with candidate details
+     * @param res 
+     * @param next 
+     */
     register = async (req:Request, res: Response, next: NextFunction) => {
         try {
             const parsed = registerSchema.parse(req.body)
@@ -86,7 +104,26 @@ export class authController {
     login = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const payload: LoginCandidateInputDTO = loginSchema.parse(req.body)
-            const candidate = await this.loginUsecase.execute(payload)
+            const {refreshToken, accessToken, candidate} = await this.loginUsecase.execute(payload)
+
+            await this.candidateRepository.updateToken(candidate.id, refreshToken)
+
+            res.cookie('refershToken', refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: 7 * 24 * 60 * 60,
+                path: '/'
+            })
+
+            res.cookie('accessToken', accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: 15 * 60 * 1000,
+                path: '/'
+            })
+            
             res.status(statusCode.OK).json({
                 success: true,
                 candidate: candidate,
@@ -96,4 +133,51 @@ export class authController {
             next(error)
         }
     }
+
+    forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const parsed = forgotPasswordSchema.parse(req.body)
+            const payload: ForgotPasswordInputDTO = {
+                email: parsed.email
+            }
+
+            await this.forgotPasswordUsecase.execute(payload)
+            
+            res.status(statusCode.OK).json({
+                success: true,
+                message: authMessages.success.RESET_PASSWORD_OTP_sEND
+            })
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    resetPassword = async ( req: Request, res: Response, next: NextFunction) => {
+        try {
+            const parsed = resetPasswordSchema.parse(req.body)
+            const payload: ResetPasswordInputDTO = {
+                email: parsed.email,
+                otp: parsed.otp,
+                newPassword: parsed.newPassword,
+                confirmPassword: parsed.confirmPassword 
+            }
+
+            await this.resetPasswordUsecase.execute(payload)
+            res.status(statusCode.OK).json({
+                success: true,
+                message: authMessages.success.PASSWORD_RESET
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    // googleLogin = async (req: Request, res: Response, next: NextFunction) =>{
+    //     try {
+    //        const parsed = 
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
 }

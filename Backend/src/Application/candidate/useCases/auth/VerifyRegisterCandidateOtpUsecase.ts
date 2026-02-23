@@ -1,5 +1,5 @@
 import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
-import { verifyRegisterCandidateOtpInputDTO, verifyRegisterCandidateOtpOutputDTO } from "../../dtos/verifyRegisterCandidateOtpDTO";
+import { verifyRegisterCandidateOtpInputDTO, verifyRegisterCandidateOtpOutputDTO } from "../../dtos/VerifyRegisterCandidateOtpDTO";
 import { IVerifyRegisterCandidate } from "../../interfaces/auth/IVerifyRegisterCandidate";
 import { IOtpService } from "../../interfaces/service/IOtpService";
 import { IOtpStore } from "../../interfaces/service/IOtpStore";
@@ -38,7 +38,7 @@ export class VerifyRegisterCandidateOtpUsecase implements IVerifyRegisterCandida
         }
 
         candidate.markAsVerified()
-        await this.candidateRepository.save(candidate)
+        await this.candidateRepository.update(candidateId, candidate)
         await this.otpStore.deleteOtp(candidateId)
 
 

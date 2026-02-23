@@ -1,7 +1,7 @@
 import userRole from "../enums/userRole.enum";
-import UserEntity from "./User.entity";
+import UserEntity from "./user.entity";
 
-export default class companyEntity extends UserEntity{
+export default class CompanyEntity extends UserEntity{
     legalName?: string;
     domain?: string;
     teamSize?: number;

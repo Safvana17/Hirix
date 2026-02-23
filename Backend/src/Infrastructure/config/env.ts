@@ -10,5 +10,6 @@ export const env = {
     REDIS_URL: process.env.REDIS_URL as string,
     NODEMAILER_USER: process.env.NODEMAILER_EMAIL,
     NODEMAILER_PASS: process.env.NODEMAILER_PASSWORD,
-    HIRIX_EMAIL: process.env.HIRIX_EMAIL
+    HIRIX_EMAIL: process.env.HIRIX_EMAIL,
+    GOOGLE_ID: process.env.GOOGLE_CLIENT_ID
 }

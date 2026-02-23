@@ -1,17 +1,18 @@
-import candidateEntity from "../../Domain/entities/Candidate.entity";
+import CandidateEntity from "../../Domain/entities/candidate.entity";
 import ICandidateRepository from "../../Domain/repositoryInterface/ICandidateRepository";
 import { candidateMapper } from "../../Application/Mappers/CandidateMapper";
-import { candidateModel } from "../database/Model/Candidate";
+import { candidateModel, ICandidate } from "../database/Model/candidate";
+import { BaseRepository } from "./baseRepository";
+import { logger } from "../../utils/logging/loger";
+import mongoose from "mongoose";
 
-export class candidateRepository implements ICandidateRepository{
+export class CandidateRepository extends BaseRepository <CandidateEntity, ICandidate> implements ICandidateRepository {
 
-    async createCandidate(candidate: candidateEntity): Promise<candidateEntity> {
-        const candidateData = candidateMapper.toDocument(candidate)
-        const savedCandidate = await candidateModel.create(candidateData)
-        return candidateMapper.toEntity(savedCandidate)
+    constructor(){
+        super(candidateModel)
     }
     
-    async findByEmail(email: string): Promise<candidateEntity | null> {
+    async findByEmail(email: string): Promise<CandidateEntity | null> {
         const candidate = await candidateModel.findOne({email})
 
         if(!candidate) return null
@@ -19,30 +20,59 @@ export class candidateRepository implements ICandidateRepository{
         return candidateMapper.toEntity(candidate)
     }
 
-    async findById(id: string): Promise<candidateEntity | null> {
-        const candidate = await candidateModel.findById({id})
-        if(!candidate) return null
-        return candidateMapper.toEntity(candidate)
-    }
-
-    async save(candidate: candidateEntity): Promise<void> {
-        const candidateData = candidateMapper.toDocument(candidate)
-
-        const updatedCandidate = await candidateModel.findByIdAndUpdate(
-            candidate.getId(),
-            candidateData,
-            {new: true}
-        )
-
-        if(!updatedCandidate){
-            throw new Error ('Candidate not found')
-        }
-    }
-
     async updatePassword(id: string, hashedPassword: string): Promise<void> {
+
+          logger.info(`Reset password ID: ${id}`);
+          logger.info(`Is valid ObjectId:${mongoose.Types.ObjectId.isValid(id)}`);
         await candidateModel.findByIdAndUpdate(
             id, 
             {$set: {password: hashedPassword}}
         )
     }
+
+    async updateToken(id: string, token: string): Promise<void> {
+        await candidateModel.findByIdAndUpdate(id,
+            {$set: {refreshToken: token}}
+        )
+    }
+
+    async updateGoogleId(email: string, googleId: string): Promise<CandidateEntity | null> {
+       const document = await candidateModel.findOneAndUpdate({email}, {googleId})
+       if(!document) return null
+       return this.mapToEntity(document)
+    }
+    
+    protected mapToEntity(doc: ICandidate): CandidateEntity {
+        return candidateMapper.toEntity(doc)
+    }
+
+    protected mapToPersistance(entity: CandidateEntity): Partial<ICandidate> {
+        return candidateMapper.toDocument(entity)
+    }
+
+    // async findById(id: string): Promise<CandidateEntity | null> {
+    //     const candidate = await candidateModel.findById({id})
+    //     if(!candidate) return null
+    //     return candidateMapper.toEntity(candidate)
+    // }
+
+    // async save(candidate: CandidateEntity): Promise<CandidateEntity | null> {
+    //     const candidateData = candidateMapper.toDocument(candidate)
+
+    //     const updatedCandidate = await candidateModel.findByIdAndUpdate(
+    //         candidate.getId(),
+    //         candidateData,
+    //         {new: true}
+    //     )
+
+    //     if(!updatedCandidate){
+    //         throw new Error ('Candidate not found')
+    //     }
+    // }
+
+ // async createCandidate(candidate: CandidateEntity): Promise<CandidateEntity> {
+    //     const candidateData = candidateMapper.toDocument(candidate)
+    //     const savedCandidate = await candidateModel.create(candidateData)
+    //     return candidateMapper.toEntity(savedCandidate)
+    // }
 }

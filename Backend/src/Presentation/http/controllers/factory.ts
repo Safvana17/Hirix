@@ -26,6 +26,8 @@ import { CompanyRepository } from "../../../Infrastructure/repositories/companyR
 import { AdminAuthController } from "./admin/authController";
 import { AdminLoginUsecase } from "../../../Application/admin/usecases/AdminLoginUsecase";
 import { AdminRepository } from "../../../Infrastructure/repositories/adminRepository";
+import { VerifyRegisterCompanyUsecase } from "../../../Application/company/usecases/VerifyCompanyUsecase";
+import { ResendOtpCompanyUsecase } from "../../../Application/company/usecases/ResendOtpCompanyUsecase";
 // import { GoogleLoginUsecase } from "../../../Application/candidate/useCases/auth/GoogleLoginUsecase";
 // import { GoogleAuthService } from "../../../Infrastructure/services/GoogleAuthService";
 
@@ -99,6 +101,19 @@ const iRegisterCompany = new RegisterCompanyUsecase(
       iMailService
 )
 
+const iVerifyCompany = new VerifyRegisterCompanyUsecase(
+    iCompanyRepository,
+    iOtpService,
+    iOtpRepository
+)
+
+const iResendOtpCompny = new ResendOtpCompanyUsecase(
+    iCompanyRepository,
+    iMailService,
+    iOtpRepository,
+    iOtpService
+)
+
 
 //admin
 
@@ -127,9 +142,13 @@ export const iCandidateAuthController = new CandidateAuthController(
 )
 
 export const iCompanyAuthController = new CompanyAuthController(
-    iRegisterCompany
+    iRegisterCompany,
+    iVerifyCompany,
+    iResendOtpCompny
 )
 
 export const iAdminAuthController = new AdminAuthController(
-    iLoginAdmin
+    iLoginAdmin,
+    iHashService,
+    iAdminRepository
 )

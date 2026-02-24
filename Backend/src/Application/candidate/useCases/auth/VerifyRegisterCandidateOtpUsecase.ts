@@ -1,9 +1,12 @@
 import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
 import { verifyRegisterCandidateOtpInputDTO, verifyRegisterCandidateOtpOutputDTO } from "../../dtos/VerifyRegisterCandidateOtpDTO";
 import { IVerifyRegisterCandidate } from "../../interfaces/auth/IVerifyRegisterCandidate";
-import { IOtpService } from "../../interfaces/service/IOtpService";
-import { IOtpStore } from "../../interfaces/service/IOtpStore";
-import { ITokenService } from "../../interfaces/service/ITokenService";
+import { IOtpService } from "../../../interface/service/IOtpService";
+import { IOtpStore } from "../../../interface/service/IOtpStore";
+import { ITokenService } from "../../../interface/service/ITokenService";
+import { AppError } from "../../../../Domain/errors/AppError";
+import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { statusCode } from "../../../../Shared/Enumes/statusCode";
 
 export class VerifyRegisterCandidateOtpUsecase implements IVerifyRegisterCandidate{
     constructor(
@@ -17,7 +20,7 @@ export class VerifyRegisterCandidateOtpUsecase implements IVerifyRegisterCandida
 
         const candidate = await this.candidateRepository.findByEmail(request.email)
         if(!candidate || !candidate.getId()){
-            throw new Error('candidate not found')
+            throw new AppError(authMessages.error.CANDIDATE_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
         if(candidate.isUserVerified()){
@@ -42,12 +45,10 @@ export class VerifyRegisterCandidateOtpUsecase implements IVerifyRegisterCandida
         await this.otpStore.deleteOtp(candidateId)
 
 
-        const refreshToken = this.tokenService.generateRefreshToken({candidateId})
-        const accessToken = this.tokenService.generateAccessToken({candidateId, email: candidate.getEmail(), role: candidate.getRole()})
+        // const refreshToken = this.tokenService.generateRefreshToken({candidateId})
+        // const accessToken = this.tokenService.generateAccessToken({candidateId, email: candidate.getEmail(), role: candidate.getRole()})
 
         return {
-            refreshToken,
-            accessToken,
             candidate: {
                 id: candidateId,
                 name: candidate.getName(),

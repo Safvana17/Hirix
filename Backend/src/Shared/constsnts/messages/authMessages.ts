@@ -26,6 +26,7 @@ export const authMessages = {
         REFRESH_TOKEN_NOT_FOUND: 'Refresh token is missing',
         INVALID_REFRESH_TOKEN: 'Invalid refresh token payload',
         ACCESS_TOKEN_EXPIRED: 'Access token is expired',
+        ALREADY_VERIFIED: 'User already verified',
         //candidate
         CANDIDATE_ID_NOT_FOUND: 'Candidate id not found',
         CANDIDATE_ALREADY_EXISTS: 'Candidate with this email already exists',

@@ -1,9 +1,9 @@
 import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
 import { ResendOtpInputDTO, ResendOtpOutputDTO } from "../../dtos/ResendOtpDTO";
 import { IResendOtpUsecase } from "../../interfaces/auth/IResendOtpUsecase";
-import { IMailService } from "../../interfaces/service/IMailService";
-import { IOtpService } from "../../interfaces/service/IOtpService";
-import { IOtpStore } from "../../interfaces/service/IOtpStore";
+import { IMailService } from "../../../interface/service/IMailService";
+import { IOtpService } from "../../../interface/service/IOtpService";
+import { IOtpStore } from "../../../interface/service/IOtpStore";
 
 export class ResendOtpUsecase implements IResendOtpUsecase {
     constructor(

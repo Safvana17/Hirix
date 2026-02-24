@@ -6,8 +6,6 @@ export interface verifyRegisterCandidateOtpInputDTO {
 }
 
 export interface verifyRegisterCandidateOtpOutputDTO {
-    accessToken: string
-    refreshToken: string
     candidate: {
         id: string,
         name: string,

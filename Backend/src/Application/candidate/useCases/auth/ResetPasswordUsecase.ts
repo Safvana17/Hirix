@@ -1,9 +1,9 @@
 import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
 import { ResetPasswordInputDTO, ResetPasswordOutputDTO } from "../../dtos/ResetPasswordDTO";
 import { IResetPasswordUsecase } from "../../interfaces/auth/IResetPasswordUsecase";
-import { IHashService } from "../../interfaces/service/IHashService";
-import { IOtpService } from "../../interfaces/service/IOtpService";
-import { IOtpStore } from "../../interfaces/service/IOtpStore";
+import { IHashService } from "../../../interface/service/IHashService";
+import { IOtpService } from "../../../interface/service/IOtpService";
+import { IOtpStore } from "../../../interface/service/IOtpStore";
 
 export class ResetPasswordUsecase implements IResetPasswordUsecase {
     constructor(

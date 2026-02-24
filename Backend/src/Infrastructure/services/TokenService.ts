@@ -1,4 +1,4 @@
-import { AccessTokenPayload, ITokenService, RefreshTokenPayload } from "../../Application/candidate/interfaces/service/ITokenService";
+import { AccessTokenPayload, ITokenService, RefreshTokenPayload } from "../../Application/interface/service/ITokenService";
 import { jwtConfig } from "../config/jwt.config";
 import jwt from 'jsonwebtoken'
 

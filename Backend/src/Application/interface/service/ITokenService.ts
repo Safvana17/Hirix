@@ -1,12 +1,12 @@
 
 export interface AccessTokenPayload { 
-    candidateId: string;
+    id: string;
     email: string;
     role: string
 }
 
 export interface RefreshTokenPayload {
-    candidateId: string;
+    id: string;
 }
 
 

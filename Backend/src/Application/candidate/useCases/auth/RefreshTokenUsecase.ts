@@ -4,7 +4,7 @@ import { authMessages } from "../../../../Shared/constsnts/messages/authMessages
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { RefreshTokenInputDTO, RefreshTokenOutputDTO } from "../../dtos/RefreshTokenDTO";
 import { IRefreshTokenUsecase } from "../../interfaces/auth/IRefreshTokenUsecase";
-import { ITokenService } from "../../interfaces/service/ITokenService";
+import { ITokenService } from "../../../interface/service/ITokenService";
 
 export class RefreshTokenUsecase implements IRefreshTokenUsecase {
     constructor(
@@ -23,7 +23,7 @@ export class RefreshTokenUsecase implements IRefreshTokenUsecase {
         }
 
         const payload = this.tokenService.verifyRefreshToken(Request.token)
-        const candidateId = payload.candidateId
+        const candidateId = payload.id
 
         if(!candidateId){
             throw new AppError(authMessages.error.INVALID_REFRESH_TOKEN, statusCode.UNAUTHORIZED)
@@ -35,12 +35,12 @@ export class RefreshTokenUsecase implements IRefreshTokenUsecase {
         }
 
         const newAccessToken = this.tokenService.generateAccessToken({
-            candidateId,
+            id: candidateId,
             email: candidate.getEmail(),
             role: candidate.getRole()
         })
 
-        const newRefereshToken = this.tokenService.generateRefreshToken({candidateId})
+        const newRefereshToken = this.tokenService.generateRefreshToken({id: candidateId})
 
         return {
             candidateId,

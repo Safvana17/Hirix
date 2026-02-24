@@ -29,6 +29,9 @@ import { AdminRepository } from "../../../Infrastructure/repositories/adminRepos
 import { VerifyRegisterCompanyUsecase } from "../../../Application/company/usecases/VerifyCompanyUsecase";
 import { ResendOtpCompanyUsecase } from "../../../Application/company/usecases/ResendOtpCompanyUsecase";
 import { LoginCompanyUsecase } from "../../../Application/company/usecases/LoginCompanyUsecase";
+import { CompanyForgotPasswordUsecase } from "../../../Application/company/usecases/CompanyForgotPasswordUsecase";
+import { CompanyResetPasswordUsecase } from "../../../Application/company/usecases/CompanyResetPasswordUsecase";
+import { CompanyRefreshTokenUsecase } from "../../../Application/company/usecases/CompanyRefreshTokenUsecase";
 // import { GoogleLoginUsecase } from "../../../Application/candidate/useCases/auth/GoogleLoginUsecase";
 // import { GoogleAuthService } from "../../../Infrastructure/services/GoogleAuthService";
 
@@ -121,6 +124,24 @@ const iLoginCompany = new LoginCompanyUsecase(
     iHashService
 )
 
+const iCompanyForgotPassword = new CompanyForgotPasswordUsecase(
+    iCompanyRepository,
+    iMailService,
+    iOtpService,
+    iOtpRepository
+)
+
+const iCompanyResetPassword = new CompanyResetPasswordUsecase(
+    iCompanyRepository,
+    iOtpRepository,
+    iOtpService,
+    iHashService
+)
+
+const iCompanyRefreshToken = new CompanyRefreshTokenUsecase(
+    iCompanyRepository,
+    iTokenService
+)
 
 //admin
 
@@ -154,7 +175,10 @@ export const iCompanyAuthController = new CompanyAuthController(
     iResendOtpCompny,
     iLoginCompany,
     iHashService,
-    iCompanyRepository
+    iCompanyRepository,
+    iCompanyForgotPassword,
+    iCompanyResetPassword,
+    iCompanyRefreshToken
 )
 
 export const iAdminAuthController = new AdminAuthController(

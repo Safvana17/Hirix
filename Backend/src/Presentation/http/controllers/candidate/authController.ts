@@ -131,14 +131,8 @@ export class CandidateAuthController {
             res.status(statusCode.OK).json({
                 success: true,
                 candidate: candidate,
-                message: authMessages.success.COMPANY_LOGIN_SUCCESS
+                message: authMessages.success.CANDIDATE_LOGIN_SUCCESS
             })
-
-            res.status(statusCode.OK).json({
-                success: true,
-                message: authMessages.success.TOKEN_REFRESHED
-            })
-
         } catch (error) {
             next(error)
         }
@@ -210,6 +204,12 @@ export class CandidateAuthController {
                 maxAge: 15 * 60 * 1000,
                 path: '/'
             })
+
+            res.status(statusCode.OK).json({
+                success: true,
+                message: authMessages.success.TOKEN_REFRESHED
+            })
+
 
         } catch (error) {
             next(error)

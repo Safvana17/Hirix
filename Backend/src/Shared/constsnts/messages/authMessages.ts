@@ -33,7 +33,8 @@ export const authMessages = {
 
 
         //company
-        COMPANY_ALREADY_EXISTS: 'Company with this email already exists'
+        COMPANY_ALREADY_EXISTS: 'Company with this email already exists',
+        COMPANY_ID_NOT_FOUND: 'Company id not found',
 
     }
 }

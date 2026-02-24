@@ -8,12 +8,20 @@ import { IVerifyRegisterCompanyUsecase } from "../../../../Application/company/i
 import { VerifyCompanyInputDTO } from "../../../../Application/company/dtos/VerifyCompanyDTO";
 import { ResendOtpCompanyInputDTO } from "../../../../Application/company/dtos/ResendOtpCompanyDTO";
 import { IResendOtpCompanyUsecase } from "../../../../Application/company/interfaces/auth/IResendOtpUsecase";
+import { loginSchema } from "../../validators/loginValidator";
+import { LoginCompanyInputDTO } from "../../../../Application/company/dtos/LoginCompanyDTO";
+import { ILoginCompanyUsecase } from "../../../../Application/company/interfaces/auth/ILoginCompanyUsecase";
+import { IHashService } from "../../../../Application/interface/service/IHashService";
+import ICompanyRepository from "../../../../Domain/repositoryInterface/ICompanyRepository";
 
 export class CompanyAuthController {
     constructor(
         private registerUsecase: ICompanyRegisterUsecase,
         private verifyCompanyUsecase: IVerifyRegisterCompanyUsecase,
-        private resendOtpCompanyUsecase: IResendOtpCompanyUsecase
+        private resendOtpCompanyUsecase: IResendOtpCompanyUsecase,
+        private loginCompanyUsecase: ILoginCompanyUsecase,
+        private hashService: IHashService,
+        private companyRepository: ICompanyRepository,
     ) {}
 
     register = async (req: Request, res: Response, next: NextFunction) => {
@@ -75,5 +83,68 @@ export class CompanyAuthController {
             } catch (error) {
                 next(error)
             }
+    }
+
+    login = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const parsed = loginSchema.parse(req.body)
+            const payload: LoginCompanyInputDTO = {
+                email: parsed.email,
+                password: parsed.password
+            }
+
+            const {refreshToken, accessToken, company} = await this.loginCompanyUsecase.execute(payload)
+
+            const hashedRefreshToken = this.hashService.hashToken(refreshToken)
+            await this.companyRepository.updateToken(company.id,hashedRefreshToken)
+
+            res.cookie('refershToken', refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: 7 * 24 * 60 * 60,
+                path: '/'
+            })
+
+            res.cookie('accessToken', accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: 15 * 60 * 1000,
+                path: '/'
+            })
+            
+            res.status(statusCode.OK).json({
+                success: true,
+                company: company,
+                message: authMessages.success.COMPANY_LOGIN_SUCCESS
+            })
+        } catch (error) {
+            next(error)
         }
+    }
+
+    // forgotPassword = async(req: Request, res: Response, next:NextFunction) => {
+    //     try {
+
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
+
+    // resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    //     try {
+            
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
+
+    // refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+    //     try {
+            
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
 }

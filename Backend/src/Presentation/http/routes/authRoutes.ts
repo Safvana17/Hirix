@@ -16,6 +16,12 @@ router.post('/candidate/refresh', iCandidateAuthController.refreshToken)
 
 //company
 router.post('/company/register', iCompanyAuthController.register)
+router.post('/comapny/verifyotp', iCompanyAuthController.verifyOtp)
+router.post('/company/resendotp', iCompanyAuthController.resendOtp)
+router.post('/company/login', iCompanyAuthController.login)
+// router.post('/company/forgotpassword', iCompanyAuthController.forgotPassword)
+// router.post('/company/resetpassword', iCompanyAuthController.resetPassword)
+// router.post('/ccompany/refresh', iCompanyAuthController.refreshToken)
 
 
 //admin

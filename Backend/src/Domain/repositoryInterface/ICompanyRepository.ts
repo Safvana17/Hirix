@@ -5,4 +5,5 @@ export default interface ICompanyRepository extends IBaseRepository <CompanyEnti
     findByEmail(email: string): Promise<CompanyEntity | null>;
     updatePassword(id: string, hashedPassword: string): Promise<void>;
     updateToken(id: string, token: string): Promise<void>
+    revokeRefreshToken(hashedToken: string): Promise<void>
 }

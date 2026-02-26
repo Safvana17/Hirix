@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AccessTokenPayload, ITokenService } from "../../../Application/candidate/interfaces/service/ITokenService";
+import { AccessTokenPayload, ITokenService } from "../../../Application/interface/service/ITokenService";
 import { AppError } from "../../../Domain/errors/AppError";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../Shared/Enumes/statusCode";
@@ -8,7 +8,7 @@ import { TokenExpiredError } from "jsonwebtoken";
 export function authHandler(tokenService: ITokenService) {
     return (req: Request, res: Response, next: NextFunction) => {
 
-        let token = req.cookies?.accessToken as string
+        let token = req.cookies.accessToken 
         if(!token){
             const authHeader = req.headers['authorization']
             if(authHeader && authHeader.startsWith('Bearer')){

@@ -15,26 +15,23 @@ import { IForgotPasswordUsecase } from "../../../../Application/candidate/interf
 import { IResetPasswordUsecase } from "../../../../Application/candidate/interfaces/auth/IResetPasswordUsecase";
 import { ForgotPasswordInputDTO } from "../../../../Application/candidate/dtos/ForgotPasswordDTO";
 import { ResetPasswordInputDTO } from "../../../../Application/candidate/dtos/ResetPasswordDTO";
-import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
-import { IHashService } from "../../../../Application/interface/service/IHashService";
 import { IRefreshTokenUsecase } from "../../../../Application/candidate/interfaces/auth/IRefreshTokenUsecase";
 import { RefreshTokenInputDTO } from "../../../../Application/candidate/dtos/RefreshTokenDTO";
+import { env } from "../../../../Infrastructure/config/env";
+import { ICandidateLogoutUsecase } from "../../../../Application/candidate/interfaces/auth/ICandidateLogoutUsecase";
 // import { IGoogleLoginUsecase } from "../../../../Application/candidate/interfaces/auth/IGoogleLoginUsecase";
 
 
 export class CandidateAuthController {
     constructor(
-        private registerUsecase: ICandidateRegisterUsecase,
-        private verifyOtp: IVerifyRegisterCandidate,
-        private resendOtpUsecase: IResendOtpUsecase,
-        private loginUsecase: ICandidateLoginUsecase,
-        private forgotPasswordUsecase: IForgotPasswordUsecase,
-        private resetPasswordUsecase: IResetPasswordUsecase,
-        private candidateRepository: ICandidateRepository,
-        private hashService: IHashService,
-        private refreshTokenUsecase: IRefreshTokenUsecase
-        // private googleLoginUsecase: IGoogleLoginUsecase
-        
+        private _registerUsecase: ICandidateRegisterUsecase,
+        private _verifyOtp: IVerifyRegisterCandidate,
+        private _resendOtpUsecase: IResendOtpUsecase,
+        private _loginUsecase: ICandidateLoginUsecase,
+        private _forgotPasswordUsecase: IForgotPasswordUsecase,
+        private _resetPasswordUsecase: IResetPasswordUsecase,
+        private _refreshTokenUsecase: IRefreshTokenUsecase,
+        private _logoutUsecase: ICandidateLogoutUsecase
     ) {}
 
 
@@ -53,9 +50,9 @@ export class CandidateAuthController {
                 password: parsed.password
             }
 
-            await this.registerUsecase.execute(payload)
+            await this._registerUsecase.execute(payload)
           
-            res.status(statusCode.OK).json({
+            return res.status(statusCode.OK).json({
                 success: true,
                 message: authMessages.success.OTP_SEND_SUCCESS
             })
@@ -72,9 +69,9 @@ export class CandidateAuthController {
                 otp: parsed.otp
             }
 
-            const savedCandidate = await this.verifyOtp.execute(payload)
+            const savedCandidate = await this._verifyOtp.execute(payload)
 
-            res.status(statusCode.CREATED).json({
+            return res.status(statusCode.CREATED).json({
                 success: true,
                 message: authMessages.success.CANDIDATE_REGISTER_SUCCESS,
                 candidate: savedCandidate
@@ -92,9 +89,9 @@ export class CandidateAuthController {
                 email: parsed.email
             }
 
-            await this.resendOtpUsecase.execute(payload)
+            await this._resendOtpUsecase.execute(payload)
 
-            res.status(statusCode.OK).json({
+            return res.status(statusCode.OK).json({
                 success: true,
                 message: authMessages.success.OTP_SEND_SUCCESS
             })
@@ -107,16 +104,16 @@ export class CandidateAuthController {
     login = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const payload: LoginCandidateInputDTO = loginSchema.parse(req.body)
-            const {refreshToken, accessToken, candidate} = await this.loginUsecase.execute(payload)
+            const {refreshToken, accessToken, candidate} = await this._loginUsecase.execute(payload)
 
-            const hashedToken = this.hashService.hashToken(refreshToken)
-            await this.candidateRepository.updateToken(candidate.id, hashedToken)
+            // const hashedToken = this._hashService.hashToken(refreshToken)
+            // await this._candidateRepository.updateToken(candidate.id, hashedToken)
 
             res.cookie('refershToken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                maxAge: 7 * 24 * 60 * 60,
+                maxAge: env.REFRESH_TOKEN_MAX_AGE,
                 path: '/'
             })
 
@@ -124,11 +121,11 @@ export class CandidateAuthController {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                maxAge: 15 * 60 * 1000,
+                maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
             })
             
-            res.status(statusCode.OK).json({
+            return res.status(statusCode.OK).json({
                 success: true,
                 candidate: candidate,
                 message: authMessages.success.CANDIDATE_LOGIN_SUCCESS
@@ -145,9 +142,9 @@ export class CandidateAuthController {
                 email: parsed.email
             }
 
-            await this.forgotPasswordUsecase.execute(payload)
+            await this._forgotPasswordUsecase.execute(payload)
             
-            res.status(statusCode.OK).json({
+            return res.status(statusCode.OK).json({
                 success: true,
                 message: authMessages.success.RESET_PASSWORD_OTP_sEND
             })
@@ -167,8 +164,8 @@ export class CandidateAuthController {
                 confirmPassword: parsed.confirmPassword 
             }
 
-            await this.resetPasswordUsecase.execute(payload)
-            res.status(statusCode.OK).json({
+            await this._resetPasswordUsecase.execute(payload)
+            return res.status(statusCode.OK).json({
                 success: true,
                 message: authMessages.success.PASSWORD_RESET
             })
@@ -184,16 +181,13 @@ export class CandidateAuthController {
                 token: parsed.token
             }
 
-            const tokens = this.refreshTokenUsecase.execute(payload)
-            
-            const hashedRefreshToken = this.hashService.hashToken((await tokens).refreshToken)
-            await this.candidateRepository.updateToken((await tokens).candidateId, hashedRefreshToken)
-
+            const tokens = this._refreshTokenUsecase.execute(payload)
+        
             res.cookie('refreshToken', (await tokens).refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV ==='production' ? 'none' : 'lax',
-                maxAge: 7 * 24 * 60 * 60 * 1000,
+                maxAge: env.REFRESH_TOKEN_MAX_AGE,
                 path: '/'
             })
 
@@ -201,16 +195,44 @@ export class CandidateAuthController {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                maxAge: 15 * 60 * 1000,
+                maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
             })
 
-            res.status(statusCode.OK).json({
+            return res.status(statusCode.OK).json({
                 success: true,
                 message: authMessages.success.TOKEN_REFRESHED
             })
 
 
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    logout = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            
+            const refreshToken = req.cookies.refershToken
+            await this._logoutUsecase.execute(refreshToken)
+
+            res.clearCookie('refreshToken', {
+                httpOnly: true,
+                sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
+                secure: process.env.NODE_ENV === 'production'
+            })
+
+            res.clearCookie('accessToken', {
+                httpOnly: true,
+                sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
+                secure: process.env.NODE_ENV === 'production'
+            })
+
+            return res.status(statusCode.NO_CONTENT).json({
+                success: true,
+                message: authMessages.success.CANDIDATE_LOGGEDOUT_SUCCESS
+            })
+            
         } catch (error) {
             next(error)
         }

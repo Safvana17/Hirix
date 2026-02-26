@@ -8,9 +8,9 @@ import { ITokenService } from "../../../interface/service/ITokenService";
 
 export class LoginCandidateUsecase {
     constructor(
-        private candidateRepository: ICandidateRepository,
-        private tokenService: ITokenService,
-        private hashService: IHashService
+        private _candidateRepository: ICandidateRepository,
+        private _tokenService: ITokenService,
+        private _hashService: IHashService
     ) {}
 
     /**
@@ -20,12 +20,12 @@ export class LoginCandidateUsecase {
      */
     async execute(request: LoginCandidateInputDTO): Promise<LoginCandidateOutputDTO> {
 
-        const candidate = await this.candidateRepository.findByEmail(request.email)
+        const candidate = await this._candidateRepository.findByEmail(request.email)
         if(!candidate){
             throw new AppError(authMessages.error.CANDIDATE_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
-        const isValidPassword = await this.hashService.compare(request.password, candidate.getPassword())
+        const isValidPassword = await this._hashService.compare(request.password, candidate.getPassword())
         if(!isValidPassword){
             throw new AppError(authMessages.error.INVALID_PASSWORD, statusCode.UNAUTHORIZED)
         }
@@ -36,11 +36,11 @@ export class LoginCandidateUsecase {
             throw new AppError(authMessages.error.CANDIDATE_ID_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
-        const refreshToken = this.tokenService.generateRefreshToken({id: candidateId})
-        const accessToken = this.tokenService.generateAccessToken({id: candidateId, email: candidate.getEmail(), role: candidate.getRole()})
+        const refreshToken = this._tokenService.generateRefreshToken({id: candidateId})
+        const accessToken = this._tokenService.generateAccessToken({id: candidateId, email: candidate.getEmail(), role: candidate.getRole()})
 
-        // const hashedRefreshToken = this.hashService.hashToken(refreshToken)
-        // await this.candidateRepository.updateToken(candidateId, refreshToken)
+        const hashedRefreshToken = this._hashService.hashToken(refreshToken)
+        await this._candidateRepository.updateToken(candidateId, hashedRefreshToken)
 
 
         return {refreshToken, accessToken, candidate: {

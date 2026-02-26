@@ -8,7 +8,10 @@ export const authMessages = {
         RESET_PASSWORD_OTP_sEND: 'Otp for reset password is send successfully',
         PASSWORD_RESET: 'Password reset successfully',
         TOKEN_REFRESHED: 'Token refreshed successfully',
-        ADMIN_LOGIN_SUCCESS: 'Admin logged in successfully'
+        ADMIN_LOGIN_SUCCESS: 'Admin logged in successfully',
+        ADMIN_LOGOUT_SUCCESS: 'Admin logged out successfully',
+        CANDIDATE_LOGGEDOUT_SUCCESS: 'Candidate logged out successfully',
+        COMPANY_LOGGEDOUT_SUCCESS: 'Company logged out successfully',
     },
     error: {
         CONFLICT: "Email already exist",
@@ -27,6 +30,9 @@ export const authMessages = {
         INVALID_REFRESH_TOKEN: 'Invalid refresh token payload',
         ACCESS_TOKEN_EXPIRED: 'Access token is expired',
         ALREADY_VERIFIED: 'User already verified',
+        ENV_VALIDATION_FAILED: 'Env validation error',
+        REFRESH_TOKEN_SECRET_NOT_FOUND: 'Refresh token secret is not available',
+        ACCESS_TOKEN_SECRET_NOT_FOUND: 'Access token secret is not available',
         //candidate
         CANDIDATE_ID_NOT_FOUND: 'Candidate id not found',
         CANDIDATE_ALREADY_EXISTS: 'Candidate with this email already exists',

@@ -1,6 +1,7 @@
-import { IOtpService } from "../../Application/candidate/interfaces/service/IOtpService";
+import { IOtpService } from "../../Application/interface/service/IOtpService";
 import bcrypt from 'bcrypt'
 import { logger } from "../../utils/logging/loger";
+import { env } from "../config/env";
 
 export class OtpService implements IOtpService{
     generate(): string {
@@ -10,7 +11,7 @@ export class OtpService implements IOtpService{
     }
 
     async hash(otp: string): Promise<string> {
-        const saltRounds = 10
+        const saltRounds = env.BCRYPT_sALT_ROUNDS
         return await bcrypt.hash(otp, saltRounds)
     }
 

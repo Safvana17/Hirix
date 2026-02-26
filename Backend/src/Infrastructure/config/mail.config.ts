@@ -4,10 +4,10 @@ import { env } from './env'
 
 export const mailTransporter = nodemailer.createTransport({
     service: 'gmail',
-    port: 587,
+    port: env.NODEMAILER_PORT,
     secure: false,
     auth: {
-        user: env.NODEMAILER_USER,
-        pass: env.NODEMAILER_PASS
+        user: env.NODEMAILER_EMAIL,
+        pass: env.NODEMAILER_PASSWORD
     } 
 })

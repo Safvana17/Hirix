@@ -1,4 +1,4 @@
-import { IMailService } from "../../Application/candidate/interfaces/service/IMailService";
+import { IMailService } from "../../Application/interface/service/IMailService";
 import { otpEmailTemplate } from "../emailTemplates/OtpTemplate";
 import { mailTransporter } from "../config/mail.config";
 import { env } from "../config/env";

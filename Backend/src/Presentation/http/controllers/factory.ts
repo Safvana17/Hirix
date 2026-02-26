@@ -32,6 +32,9 @@ import { LoginCompanyUsecase } from "../../../Application/company/usecases/Login
 import { CompanyForgotPasswordUsecase } from "../../../Application/company/usecases/CompanyForgotPasswordUsecase";
 import { CompanyResetPasswordUsecase } from "../../../Application/company/usecases/CompanyResetPasswordUsecase";
 import { CompanyRefreshTokenUsecase } from "../../../Application/company/usecases/CompanyRefreshTokenUsecase";
+import { AdminLogoutUsecase } from "../../../Application/admin/usecases/admin.logout.usecase";
+import { CandidateLogoutUsecase } from "../../../Application/candidate/useCases/auth/CandidateLogoutUsecase";
+import { CompanyLogoutUsecase } from "../../../Application/company/usecases/CompanyLogoutUsecase";
 // import { GoogleLoginUsecase } from "../../../Application/candidate/useCases/auth/GoogleLoginUsecase";
 // import { GoogleAuthService } from "../../../Infrastructure/services/GoogleAuthService";
 
@@ -91,7 +94,13 @@ const iResetPassword = new ResetPasswordUsecase(
 
 const iRefreshToken = new RefreshTokenUsecase (
     iTokenService,
-    iCandidateRepository
+    iCandidateRepository,
+    iHashService
+)
+
+const iLogoutCandidate = new CandidateLogoutUsecase(
+    iCandidateRepository,
+    iHashService
 )
 
 
@@ -140,7 +149,13 @@ const iCompanyResetPassword = new CompanyResetPasswordUsecase(
 
 const iCompanyRefreshToken = new CompanyRefreshTokenUsecase(
     iCompanyRepository,
-    iTokenService
+    iTokenService,
+    iHashService
+)
+
+const iLogoutCompany = new CompanyLogoutUsecase(
+    iCompanyRepository,
+    iHashService
 )
 
 //admin
@@ -149,6 +164,11 @@ const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
     iHashService,
     iTokenService
+)
+
+const iLogoutAdmin = new AdminLogoutUsecase(
+    iAdminRepository,
+    iHashService
 )
 // const iGoogleLogin = new GoogleLoginUsecase(
 //     iCandidateRepository,
@@ -163,10 +183,8 @@ export const iCandidateAuthController = new CandidateAuthController(
     iLoginCandidate,
     iForgotPassword,
     iResetPassword,
-    iCandidateRepository,
-    iHashService,
-    iRefreshToken
-    // iGoogleLogin
+    iRefreshToken,
+    iLogoutCandidate
 )
 
 export const iCompanyAuthController = new CompanyAuthController(
@@ -174,15 +192,13 @@ export const iCompanyAuthController = new CompanyAuthController(
     iVerifyCompany,
     iResendOtpCompny,
     iLoginCompany,
-    iHashService,
-    iCompanyRepository,
     iCompanyForgotPassword,
     iCompanyResetPassword,
-    iCompanyRefreshToken
+    iCompanyRefreshToken,
+    iLogoutCompany
 )
 
 export const iAdminAuthController = new AdminAuthController(
     iLoginAdmin,
-    iHashService,
-    iAdminRepository
+    iLogoutAdmin
 )

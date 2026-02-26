@@ -2,16 +2,15 @@ import { NextFunction, Request, Response } from "express";
 import { IAdminLoginUsecase } from "../../../../Application/admin/interfaces/IAdminLoginUsecase";
 import { loginSchema } from "../../validators/loginValidator";
 import { LoginAdminInputDto } from "../../../../Application/admin/dtos/LoginAdminDTO";
-import { IHashService } from "../../../../Application/interface/service/IHashService";
-import IAdminRepository from "../../../../Domain/repositoryInterface/IAdminRepository";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { env } from "../../../../Infrastructure/config/env";
+import { IAdminLogoutUsecase } from "../../../../Application/admin/interfaces/IAdminLogoutUsecase";
 
 export class AdminAuthController {
     constructor(
-        private loginUsecase: IAdminLoginUsecase,
-        private hashService: IHashService,
-        private adminRepository: IAdminRepository
+        private _loginUsecase: IAdminLoginUsecase,
+        private _logoutUsecase: IAdminLogoutUsecase
     ) {}
 
     login = async (req: Request, res: Response, next: NextFunction) => {
@@ -22,16 +21,16 @@ export class AdminAuthController {
                 password: parsed.password
             }
 
-            const {refreshToken, accessToken, admin} = await this.loginUsecase.execute(payload)
+            const {refreshToken, accessToken} = await this._loginUsecase.execute(payload)
 
-            const hashedToken = this.hashService.hashToken(refreshToken)
-            await this.adminRepository.updateToken(admin.id, hashedToken)
+            // const hashedToken = this.hashService.hashToken(refreshToken)
+            // await this.adminRepository.updateToken(admin.id, hashedToken)
 
-            res.cookie('refershToken', refreshToken, {
+            res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                maxAge: 7 * 24 * 60 * 60,
+                maxAge: env.REFRESH_TOKEN_MAX_AGE,
                 path: '/'
             })
 
@@ -39,11 +38,11 @@ export class AdminAuthController {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                maxAge: 15 * 60 * 1000,
+                maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
             })
 
-            res.status(statusCode.OK).json({
+            return res.status(statusCode.OK).json({
                 success: true,
                 message: authMessages.success.ADMIN_LOGIN_SUCCESS
             })
@@ -52,4 +51,31 @@ export class AdminAuthController {
             next(error)
         }
     }
+
+    logout = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+
+            const refreshToken = req.cookies?.refershToken
+            await this._logoutUsecase.execute(refreshToken)
+            res.clearCookie('refreshToken', {
+                httpOnly: true,
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                secure: process.env.NODE_ENV === 'production',
+            })
+
+            res.clearCookie('accessToken', {
+                httpOnly: true,
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                secure: process.env.NODE_ENV === 'production'
+            })
+            return res.status(statusCode.NO_CONTENT).json({
+                success: true,
+                message: authMessages.success.ADMIN_LOGOUT_SUCCESS
+            })
+
+        } catch (error) {
+            next(error)
+        }
+    }
 }
+

@@ -21,6 +21,17 @@ export class AdminRepository extends BaseRepository <AdminEntity, IAdmin> implem
             {$push: {refreshTokens: token}}
         )
     }
+
+    async revokeRefreshToken(token: string): Promise<void> {
+        await adminModel.findOneAndUpdate(
+            {
+                refreshTokens: token
+            },
+            {
+                $pull: {refreshTokens: token}
+            }
+        )
+    }
     
     protected mapToEntity(doc: IAdmin): AdminEntity {
         return AdminMapper.toEntity(doc)

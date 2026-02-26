@@ -11,26 +11,25 @@ import { IResendOtpCompanyUsecase } from "../../../../Application/company/interf
 import { loginSchema, refreshTokenSchema } from "../../validators/loginValidator";
 import { LoginCompanyInputDTO } from "../../../../Application/company/dtos/LoginCompanyDTO";
 import { ILoginCompanyUsecase } from "../../../../Application/company/interfaces/auth/ILoginCompanyUsecase";
-import { IHashService } from "../../../../Application/interface/service/IHashService";
-import ICompanyRepository from "../../../../Domain/repositoryInterface/ICompanyRepository";
 import { ICompanyForgotPasswordUsecase } from "../../../../Application/company/interfaces/auth/ICompanyForgotPasswordUsecase";
 import { ICompanyResetPasswordUsecase } from "../../../../Application/company/interfaces/auth/ICompanyResetPasswordUsecase";
 import { ICompanyRefreshTokenUsecase } from "../../../../Application/company/interfaces/auth/ICompanyRefreshTokenUsecase";
 import { CompanyForgotPasswordInputDTO } from "../../../../Application/company/dtos/CompanyForgotPasswordDTO";
 import { CompanyResetPasswordInputDTO } from "../../../../Application/company/dtos/CompanyResetPasswordDTO";
 import { CompanyRefreshTokenInputDTO } from "../../../../Application/company/dtos/CompanyRefreshTokenDTO";
+import { env } from "../../../../Infrastructure/config/env";
+import { ICompanyLogoutUsecase } from "../../../../Application/company/interfaces/auth/ICompanyLogoutUsecase";
 
 export class CompanyAuthController {
     constructor(
-        private registerUsecase: ICompanyRegisterUsecase,
-        private verifyCompanyUsecase: IVerifyRegisterCompanyUsecase,
-        private resendOtpCompanyUsecase: IResendOtpCompanyUsecase,
-        private loginCompanyUsecase: ILoginCompanyUsecase,
-        private hashService: IHashService,
-        private companyRepository: ICompanyRepository,
-        private companyForgotPasswordUsecase: ICompanyForgotPasswordUsecase,
-        private companyResetPasswordUsecase: ICompanyResetPasswordUsecase,
-        private companyRefreshTokenUsecase: ICompanyRefreshTokenUsecase
+        private _registerUsecase: ICompanyRegisterUsecase,
+        private _verifyCompanyUsecase: IVerifyRegisterCompanyUsecase,
+        private _resendOtpCompanyUsecase: IResendOtpCompanyUsecase,
+        private _loginCompanyUsecase: ILoginCompanyUsecase,
+        private _companyForgotPasswordUsecase: ICompanyForgotPasswordUsecase,
+        private _companyResetPasswordUsecase: ICompanyResetPasswordUsecase,
+        private _companyRefreshTokenUsecase: ICompanyRefreshTokenUsecase,
+        private _companyLogoutUsecase: ICompanyLogoutUsecase
     ) {}
 
     register = async (req: Request, res: Response, next: NextFunction) => {
@@ -42,8 +41,8 @@ export class CompanyAuthController {
                 password: parsed.password
             }
 
-            await this.registerUsecase.execute(payload)
-            res.status(statusCode.OK).json({
+            await this._registerUsecase.execute(payload)
+            return res.status(statusCode.OK).json({
                 success: true,
                 message: authMessages.success.OTP_SEND_SUCCESS
             })
@@ -62,9 +61,9 @@ export class CompanyAuthController {
                 otp: parsed.otp
             }
 
-            const savedCompany = await this.verifyCompanyUsecase.execute(payload)
+            const savedCompany = await this._verifyCompanyUsecase.execute(payload)
 
-            res.status(statusCode.CREATED).json({
+            return res.status(statusCode.CREATED).json({
                 success: true,
                 company: savedCompany,
                 message: authMessages.success.COMPANY_REGISTER_SUCCESS
@@ -82,8 +81,8 @@ export class CompanyAuthController {
                     email: parsed.email
                 }
 
-                await this.resendOtpCompanyUsecase.execute(payload)
-                res.status(statusCode.OK).json({
+                await this._resendOtpCompanyUsecase.execute(payload)
+                return res.status(statusCode.OK).json({
                     success: true,
                     message: authMessages.success.COMPANY_REGISTER_SUCCESS
                 })
@@ -102,16 +101,16 @@ export class CompanyAuthController {
                 password: parsed.password
             }
 
-            const {refreshToken, accessToken, company} = await this.loginCompanyUsecase.execute(payload)
+            const {refreshToken, accessToken, company} = await this._loginCompanyUsecase.execute(payload)
 
-            const hashedRefreshToken = this.hashService.hashToken(refreshToken)
-            await this.companyRepository.updateToken(company.id,hashedRefreshToken)
+            // const hashedRefreshToken = this._hashService.hashToken(refreshToken)
+            // await this._companyRepository.updateToken(company.id,hashedRefreshToken)
 
             res.cookie('refershToken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                maxAge: 7 * 24 * 60 * 60,
+                maxAge: env.REFRESH_TOKEN_MAX_AGE,
                 path: '/'
             })
 
@@ -119,11 +118,11 @@ export class CompanyAuthController {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                maxAge: 15 * 60 * 1000,
+                maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
             })
             
-            res.status(statusCode.OK).json({
+            return res.status(statusCode.OK).json({
                 success: true,
                 company: company,
                 message: authMessages.success.COMPANY_LOGIN_SUCCESS
@@ -140,9 +139,9 @@ export class CompanyAuthController {
                 email: parsed.email
             }
 
-            await this.companyForgotPasswordUsecase.execute(payload)
+            await this._companyForgotPasswordUsecase.execute(payload)
             
-            res.status(statusCode.OK).json({
+            return res.status(statusCode.OK).json({
                 success: true,
                 message: authMessages.success.RESET_PASSWORD_OTP_sEND
             })
@@ -161,8 +160,8 @@ export class CompanyAuthController {
                 confirmPassword: parsed.confirmPassword 
             }
 
-            await this.companyResetPasswordUsecase.execute(payload)
-            res.status(statusCode.OK).json({
+            await this._companyResetPasswordUsecase.execute(payload)
+            return res.status(statusCode.OK).json({
                 success: true,
                 message: authMessages.success.PASSWORD_RESET
             })
@@ -178,16 +177,13 @@ export class CompanyAuthController {
                 token: parsed.token
             }
 
-            const tokens = this.companyRefreshTokenUsecase.execute(payload)
-            
-            const hashedRefreshToken = this.hashService.hashToken((await tokens).refreshToken)
-            await this.companyRepository.updateToken((await tokens).companyId, hashedRefreshToken)
+            const tokens = this._companyRefreshTokenUsecase.execute(payload)
 
             res.cookie('refreshToken', (await tokens).refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV ==='production' ? 'none' : 'lax',
-                maxAge: 7 * 24 * 60 * 60 * 1000,
+                maxAge: env.REFRESH_TOKEN_MAX_AGE,
                 path: '/'
             })
 
@@ -195,15 +191,43 @@ export class CompanyAuthController {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                maxAge: 15 * 60 * 1000,
+                maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
             })
 
-            res.status(statusCode.OK).json({
+            return res.status(statusCode.OK).json({
                 success: true,
                 message: authMessages.success.TOKEN_REFRESHED
             })
 
+        } catch (error) {
+            next(error)
+        }
+    }
+
+logout = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            
+            const refreshToken = req.cookies.refershToken
+            await this._companyLogoutUsecase.execute(refreshToken)
+
+            res.clearCookie('refreshToken', {
+                httpOnly: true,
+                sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
+                secure: process.env.NODE_ENV === 'production'
+            })
+
+            res.clearCookie('accessToken', {
+                httpOnly: true,
+                sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
+                secure: process.env.NODE_ENV === 'production'
+            })
+
+            return res.status(statusCode.NO_CONTENT).json({
+                success: true,
+                message: authMessages.success.CANDIDATE_LOGGEDOUT_SUCCESS
+            })
+            
         } catch (error) {
             next(error)
         }

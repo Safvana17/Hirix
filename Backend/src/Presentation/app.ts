@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import cookieparser from 'cookie-parser'
+import cookieParser from 'cookie-parser'
 import { connectDB } from '../Infrastructure/config/mongo.config';
 import routes from './http/routes/index'
 import { logger } from '../utils/logging/loger';
@@ -11,7 +11,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(cookieparser())
+app.use(cookieParser())
 app.use(express.urlencoded({extended: true}))
 
 connectDB().catch((err) => {

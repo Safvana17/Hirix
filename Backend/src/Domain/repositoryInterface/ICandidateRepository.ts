@@ -7,4 +7,5 @@ export default interface ICandidateRepository extends IBaseRepository <Candidate
     updatePassword(id: string, hashedPassword: string): Promise<void>;
     updateToken(id: string, token: string): Promise<void>;
     updateGoogleId(email: string, googleId: string): Promise<CandidateEntity | null>
+    revokeRefreshToken(hashedToken: string): Promise<void>
 }

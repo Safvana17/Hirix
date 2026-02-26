@@ -4,32 +4,35 @@ import { IForgotPasswordUsecase } from "../../interfaces/auth/IForgotPasswordUse
 import { IMailService } from "../../../interface/service/IMailService";
 import { IOtpService } from "../../../interface/service/IOtpService";
 import { IOtpStore } from "../../../interface/service/IOtpStore";
+import { AppError } from "../../../../Domain/errors/AppError";
+import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { statusCode } from "../../../../Shared/Enumes/statusCode";
 
 
 export class ForgotPasswordUsecase implements IForgotPasswordUsecase{
     constructor(
-        private candidateRepository: ICandidateRepository,
-        private otpService: IOtpService,
-        private otpStore: IOtpStore,
-        private mailService: IMailService
+        private _candidateRepository: ICandidateRepository,
+        private _otpService: IOtpService,
+        private _otpStore: IOtpStore,
+        private _mailService: IMailService
     ) {}
 
     async execute(request: ForgotPasswordInputDTO): Promise<ForgotPasswordOutputDTO> {
         
-        const candidate = await this.candidateRepository.findByEmail(request.email)
+        const candidate = await this._candidateRepository.findByEmail(request.email)
 
         if(!candidate || !candidate.getId()){
-            throw new Error('Candidate not found')
+            throw new AppError(authMessages.error.CANDIDATE_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
         const id = candidate.getId()
         const candidateId = id!;
 
-        const otp = this.otpService.generate()
-        const hashedOtp = await this.otpService.hash(otp)
+        const otp = this._otpService.generate()
+        const hashedOtp = await this._otpService.hash(otp)
 
-        await this.otpStore.saveOtp(candidateId, hashedOtp, 120)
-        await this.mailService.sentOtp(candidate.getEmail(), otp)
+        await this._otpStore.saveOtp(candidateId, hashedOtp, 120)
+        await this._mailService.sentOtp(candidate.getEmail(), otp)
 
         return {success: true}
     }

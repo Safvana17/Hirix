@@ -29,6 +29,13 @@ export class CompanyRepository extends BaseRepository<CompanyEntity, ICompany> i
         )
     }
 
+    async revokeRefreshToken(hashedToken: string): Promise<void> {
+        await this._model.findOneAndUpdate(
+            {refreshToken: hashedToken},
+            {$pull: {refreshToken: hashedToken}}
+        )
+    }
+
     protected mapToEntity(doc: ICompany): CompanyEntity {
         return CompanyMapper.toEntity(doc)
     }

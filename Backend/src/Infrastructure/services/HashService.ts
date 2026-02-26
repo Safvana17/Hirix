@@ -1,10 +1,11 @@
-import { IHashService } from "../../Application/candidate/interfaces/service/IHashService";
+import { IHashService } from "../../Application/interface/service/IHashService";
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
+import { env } from "../config/env";
 
 export class HashService implements IHashService{
     async hash(password: string): Promise<string> {
-        const saltRounds = 10
+        const saltRounds = env.BCRYPT_sALT_ROUNDS
         return await bcrypt.hash(password, saltRounds)
     }
 

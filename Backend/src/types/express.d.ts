@@ -1,15 +1,14 @@
+import 'express-serve-static-core'
 import { AccessTokenPayload } from "../../Application/candidate/interfaces/service/ITokenService";
 
-declare global {
-    namespace Express {
+declare module 'express-serve-static-core' {
         interface Request {
             user? : AccessTokenPayload,
-            cookies?: {
+            cookies: {
                accessToken?: string,
                refreshToken?: string
             }
         }
-    }
 }
 
 export {}

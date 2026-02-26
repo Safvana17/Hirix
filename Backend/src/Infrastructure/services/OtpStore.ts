@@ -1,5 +1,5 @@
 import Redis from 'ioredis'
-import { IOtpStore } from '../../Application/candidate/interfaces/service/IOtpStore'
+import { IOtpStore } from '../../Application/interface/service/IOtpStore'
 
 export class OtpRepository implements IOtpStore{
     constructor(private redis: Redis) {}

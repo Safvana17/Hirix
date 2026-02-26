@@ -1,4 +1,4 @@
-import { ErrorRequestHandler, Request, Response } from "express";
+import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import { logger } from "../../../utils/logging/loger";
 import { AppError } from "../../../Domain/errors/AppError";
 import { ZodError } from "zod";
@@ -9,6 +9,7 @@ export const errorHandler: ErrorRequestHandler = (
     error: unknown,
     req: Request,
     res: Response,
+    next: NextFunction
 ): void =>{
     logger.info('From error handler')
 

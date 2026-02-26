@@ -32,7 +32,7 @@ const adminSchema: Schema<IAdmin> = new Schema({
         default: userRole.Admin,
         enum: Object.values(userRole)
     },
-    refreshToken: {
+    refreshTokens: {
         type: [String],
         default: []
     },

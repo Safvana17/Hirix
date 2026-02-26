@@ -9,9 +9,9 @@ import { IAdminLoginUsecase } from "../interfaces/IAdminLoginUsecase";
 
 export class AdminLoginUsecase implements IAdminLoginUsecase {
     constructor(
-        private adminRepository: IAdminRepository,
-        private hashService: IHashService,
-        private tokenService: ITokenService
+        private _adminRepository: IAdminRepository,
+        private _hashService: IHashService,
+        private _tokenService: ITokenService
     ) {}
 
     /**
@@ -20,12 +20,12 @@ export class AdminLoginUsecase implements IAdminLoginUsecase {
      * @returns access token, refresh token and admin details
      */
     async execute(request: LoginAdminInputDto): Promise<LoginAdminOutputDTO> {
-        const admin = await this.adminRepository.findByEmail(request.email)
+        const admin = await this._adminRepository.findByEmail(request.email)
         if(!admin){
             throw new AppError(authMessages.error.ADMIN_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
-        const iValidPassword = await this.hashService.compare(request.password, admin.password)
+        const iValidPassword = await this._hashService.compare(request.password, admin.password)
         if(!iValidPassword){
             throw new AppError(authMessages.error.INVALID_PASSWORD, statusCode.BAD_REQUEST)
         } 
@@ -35,13 +35,15 @@ export class AdminLoginUsecase implements IAdminLoginUsecase {
             throw new AppError(authMessages.error.ADMIN_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
-        const refreshToken = this.tokenService.generateRefreshToken({candidateId: id})
-        const accessToken = this.tokenService.generateAccessToken({candidateId: id, email: admin.email, role: admin.role})
+        const refreshToken = this._tokenService.generateRefreshToken({id: id})
+        const accessToken = this._tokenService.generateAccessToken({id: id, email: admin.email, role: admin.role})
+
+        const hashedRefreshToken = this._hashService.hashToken(refreshToken)
+        await this._adminRepository.updateToken(id, hashedRefreshToken)
 
         return {
            accessToken,
            refreshToken,
-           admin
         }
     }
 }

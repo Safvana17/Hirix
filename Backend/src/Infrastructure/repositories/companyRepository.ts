@@ -29,6 +29,22 @@ export class CompanyRepository extends BaseRepository<CompanyEntity, ICompany> i
         )
     }
 
+    async updateGoogleId(email: string, googleId: string): Promise<CompanyEntity | null> {
+        const document = await this._model.findOneAndUpdate(
+            {
+                email,
+                googleId: { $exists: false}
+            }, 
+            {
+                $set: {googleId}
+            },
+            {new: true}
+        )
+
+        if(!document) return null
+        return this.mapToEntity(document)
+    }
+
     async revokeRefreshToken(hashedToken: string): Promise<void> {
         await this._model.findOneAndUpdate(
             {refreshToken: hashedToken},

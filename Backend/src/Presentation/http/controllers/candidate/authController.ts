@@ -6,7 +6,7 @@ import { IVerifyRegisterCandidate } from "../../../../Application/candidate/inte
 import { RegisterCandidateInputDTO } from "../../../../Application/candidate/dtos/RegisterCandidateDTO";
 import { forgotPasswordSchema, otpSchema, registerSchema, resendOtpSchema, resetPasswordSchema } from "../../validators/registerValidator";
 import { verifyRegisterCandidateOtpInputDTO } from "../../../../Application/candidate/dtos/VerifyRegisterCandidateOtpDTO";
-import { loginSchema, refreshTokenSchema } from "../../validators/loginValidator";
+import { googleLoginSchema, loginSchema, refreshTokenSchema } from "../../validators/loginValidator";
 import { LoginCandidateInputDTO } from "../../../../Application/candidate/dtos/LoginCandidateDTO";
 import { ICandidateLoginUsecase } from "../../../../Application/candidate/interfaces/auth/ICandidateLoginUsecase";
 import { IResendOtpUsecase } from "../../../../Application/candidate/interfaces/auth/IResendOtpUsecase";
@@ -19,7 +19,8 @@ import { IRefreshTokenUsecase } from "../../../../Application/candidate/interfac
 import { RefreshTokenInputDTO } from "../../../../Application/candidate/dtos/RefreshTokenDTO";
 import { env } from "../../../../Infrastructure/config/env";
 import { ICandidateLogoutUsecase } from "../../../../Application/candidate/interfaces/auth/ICandidateLogoutUsecase";
-// import { IGoogleLoginUsecase } from "../../../../Application/candidate/interfaces/auth/IGoogleLoginUsecase";
+import { IGoogleLoginUsecase } from "../../../../Application/candidate/interfaces/auth/IGoogleLoginUsecase";
+import userRole from "../../../../Domain/enums/userRole.enum";
 
 
 export class CandidateAuthController {
@@ -31,7 +32,8 @@ export class CandidateAuthController {
         private _forgotPasswordUsecase: IForgotPasswordUsecase,
         private _resetPasswordUsecase: IResetPasswordUsecase,
         private _refreshTokenUsecase: IRefreshTokenUsecase,
-        private _logoutUsecase: ICandidateLogoutUsecase
+        private _logoutUsecase: ICandidateLogoutUsecase,
+        private _gooleLoginUsecase: IGoogleLoginUsecase
     ) {}
 
 
@@ -237,11 +239,35 @@ export class CandidateAuthController {
             next(error)
         }
     }
-    // googleLogin = async (req: Request, res: Response, next: NextFunction) =>{
-    //     try {
-    //        const parsed = 
-    //     } catch (error) {
-    //         next(error)
-    //     }
-    // }
+    googleLogin = async (req: Request, res: Response, next: NextFunction) =>{
+        try {
+           const parsed = googleLoginSchema.parse(req.body)
+           const payload = parsed.token
+           const {refreshToken, accessToken, candidate} = await this._gooleLoginUsecase.execute(payload, userRole.Candidate)
+
+           res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            maxAge: env.REFRESH_TOKEN_MAX_AGE,
+            path: '/'
+           })
+
+           res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            maxAge: env.ACCESS_TOKEN_MAX_AGE,
+            path: '/' 
+           })
+
+           return res.status(statusCode.OK).json({
+            success: true,
+            message: authMessages.success.CANDIDATE_LOGIN_SUCCESS,
+            candidate: candidate
+           })
+        } catch (error) {
+            next(error)
+        }
+    }
 }

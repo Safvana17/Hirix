@@ -12,6 +12,7 @@ export const authMessages = {
         ADMIN_LOGOUT_SUCCESS: 'Admin logged out successfully',
         CANDIDATE_LOGGEDOUT_SUCCESS: 'Candidate logged out successfully',
         COMPANY_LOGGEDOUT_SUCCESS: 'Company logged out successfully',
+        
     },
     error: {
         CONFLICT: "Email already exist",
@@ -33,6 +34,8 @@ export const authMessages = {
         ENV_VALIDATION_FAILED: 'Env validation error',
         REFRESH_TOKEN_SECRET_NOT_FOUND: 'Refresh token secret is not available',
         ACCESS_TOKEN_SECRET_NOT_FOUND: 'Access token secret is not available',
+        INVALID_GOOGLE_TOKEN_PAYLOAD: 'Invalid google token payload',
+        GOOGLE_TOKEN_VERIFICATION_FAILURE: 'Failed to verify google token',
         //candidate
         CANDIDATE_ID_NOT_FOUND: 'Candidate id not found',
         CANDIDATE_ALREADY_EXISTS: 'Candidate with this email already exists',

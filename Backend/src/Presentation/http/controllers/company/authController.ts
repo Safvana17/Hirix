@@ -8,7 +8,7 @@ import { IVerifyRegisterCompanyUsecase } from "../../../../Application/company/i
 import { VerifyCompanyInputDTO } from "../../../../Application/company/dtos/VerifyCompanyDTO";
 import { ResendOtpCompanyInputDTO } from "../../../../Application/company/dtos/ResendOtpCompanyDTO";
 import { IResendOtpCompanyUsecase } from "../../../../Application/company/interfaces/auth/IResendOtpUsecase";
-import { loginSchema, refreshTokenSchema } from "../../validators/loginValidator";
+import { googleLoginSchema, loginSchema, refreshTokenSchema } from "../../validators/loginValidator";
 import { LoginCompanyInputDTO } from "../../../../Application/company/dtos/LoginCompanyDTO";
 import { ILoginCompanyUsecase } from "../../../../Application/company/interfaces/auth/ILoginCompanyUsecase";
 import { ICompanyForgotPasswordUsecase } from "../../../../Application/company/interfaces/auth/ICompanyForgotPasswordUsecase";
@@ -19,6 +19,8 @@ import { CompanyResetPasswordInputDTO } from "../../../../Application/company/dt
 import { CompanyRefreshTokenInputDTO } from "../../../../Application/company/dtos/CompanyRefreshTokenDTO";
 import { env } from "../../../../Infrastructure/config/env";
 import { ICompanyLogoutUsecase } from "../../../../Application/company/interfaces/auth/ICompanyLogoutUsecase";
+import { ICompanyGoogleLoginUsecase } from "../../../../Application/company/interfaces/auth/ICompanyGoogleLoginUsecase";
+import userRole from "../../../../Domain/enums/userRole.enum";
 
 export class CompanyAuthController {
     constructor(
@@ -29,7 +31,8 @@ export class CompanyAuthController {
         private _companyForgotPasswordUsecase: ICompanyForgotPasswordUsecase,
         private _companyResetPasswordUsecase: ICompanyResetPasswordUsecase,
         private _companyRefreshTokenUsecase: ICompanyRefreshTokenUsecase,
-        private _companyLogoutUsecase: ICompanyLogoutUsecase
+        private _companyLogoutUsecase: ICompanyLogoutUsecase,
+        private _companyGoogleLogin: ICompanyGoogleLoginUsecase
     ) {}
 
     register = async (req: Request, res: Response, next: NextFunction) => {
@@ -228,6 +231,40 @@ logout = async (req: Request, res: Response, next: NextFunction) => {
                 message: authMessages.success.CANDIDATE_LOGGEDOUT_SUCCESS
             })
             
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    googleLogin = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const parsed = googleLoginSchema.parse(req.body)
+            const payload = parsed.token
+
+            const {refreshToken, accessToken, company} =await this._companyGoogleLogin.execute(payload, userRole.Company)
+
+            res.cookie('refershToken', refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: env.REFRESH_TOKEN_MAX_AGE,
+                path: '/'
+            })
+
+            res.cookie('accessToken', accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: env.ACCESS_TOKEN_MAX_AGE,
+                path: '/'
+            })
+            
+            return res.status(statusCode.OK).json({
+                success: true,
+                company: company,
+                message: authMessages.success.COMPANY_LOGIN_SUCCESS
+            })           
+
         } catch (error) {
             next(error)
         }

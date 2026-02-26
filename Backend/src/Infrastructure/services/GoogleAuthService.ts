@@ -1,9 +1,41 @@
-// import { GoogleAuthDTO } from "../../Application/candidate/dtos/LoginCandidateDTO";
-// import { IGoogleAuthService } from "../../Application/candidate/interfaces/service/IGoogleAuthService";
+import { GoogleAuthDTO } from "../../Application/candidate/dtos/LoginCandidateDTO";
+import { IGoogleAuthService } from "../../Application/interface/service/IGoogleAuthService";
+import { OAuth2Client } from "google-auth-library";
+import { env } from "../config/env";
+import { AppError } from "../../Domain/errors/AppError";
+import { authMessages } from "../../Shared/constsnts/messages/authMessages";
+import { statusCode } from "../../Shared/Enumes/statusCode";
+import { logger } from "../../utils/logging/loger";
 
-// export class GoogleAuthService implements IGoogleAuthService{
+export class GoogleAuthService implements IGoogleAuthService{
+
+    private client: OAuth2Client
     
-//     async getUserInfo(Token: string): Promise<GoogleAuthDTO> {
-        
-//     }
-// }
+    constructor(){
+        this.client = new OAuth2Client(env.GOOGLE_CLIENT_ID)
+    }
+
+    async getUserInfo(Token: string): Promise<GoogleAuthDTO> {
+        try {
+            const ticket = await this.client.verifyIdToken({
+                idToken: Token,
+                audience: env.GOOGLE_CLIENT_ID
+            })
+
+            const payload = ticket.getPayload()
+            if(!payload || !payload.email){
+                throw new AppError(authMessages.error.INVALID_GOOGLE_TOKEN_PAYLOAD, statusCode.UNAUTHORIZED)
+            }
+
+            return {
+                isVerified: payload.email_verified || false,
+                googleId: payload.sub,
+                email: payload.email,
+                name: payload.name || 'unknown user'
+            }
+        } catch (error) {
+            logger.error(`failed to verify google token: ${error}`)
+            throw new AppError(authMessages.error.GOOGLE_TOKEN_VERIFICATION_FAILURE, statusCode.UNAUTHORIZED)
+        }
+    }
+}

@@ -1,4 +1,6 @@
 .env
+Backend/.env
+Frontend/.env
 node_modules/
 Backend/node_modules/
 dist/

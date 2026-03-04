@@ -26,3 +26,28 @@ export interface LoginData {
     email: string,
     password: string
 }
+
+export interface RegisterPayload {
+    role: UserRole;
+    data: {
+        name: string;
+        email: string;
+        password: string;
+        confirmPassword: string
+    }
+}
+
+export interface RegisterData {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string
+}
+
+export interface ResetPasswordPayload {
+    role: UserRole
+    email: string
+    otp: string
+    newPassword: string
+    confirmPassword: string
+}

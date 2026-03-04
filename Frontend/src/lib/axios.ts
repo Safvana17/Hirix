@@ -1,10 +1,15 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
-import { store } from "../redux/store";
-import { logoutUser } from "../redux/slices/authSlice";
+// import { store } from "../redux/store";
+// import { logoutUser } from "../redux/slices/authSlice";
 
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     _retry: boolean
+}
+
+let logoutHandler: ((role: string) => void) | null = null
+export const setLogoutHandler = (handler: (role: string) => void) => {
+    logoutHandler = handler
 }
 
 const api = axios.create({
@@ -60,7 +65,10 @@ api.interceptors.response.use(
                 return api(originalRequest)
             } catch (refreshError) {
                 processQueue(refreshError)
-                store.dispatch(logoutUser(role))
+                // store.dispatch(logoutUser(role))
+                if(logoutHandler){
+                    logoutHandler(role)
+                }
                 return Promise.reject(refreshError)
             }finally{
                 isRefreshing = false

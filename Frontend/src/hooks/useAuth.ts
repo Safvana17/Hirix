@@ -1,14 +1,18 @@
 import { useDispatch, useSelector } from "react-redux"
 import {type AppDispatch, type RootState } from "../redux/store"
-import { clearError, getMe, loginUser, logoutUser } from "../redux/slices/authSlice"
+import { clearError, getMe, loginUser, logoutUser, registerUser } from "../redux/slices/authSlice"
 import type { UserRole } from "../constants/role"
-import type { LoginData } from "../types/user"
+import type { LoginData, RegisterData } from "../types/user"
 
 export const useAuth = () => {
     const dispatch = useDispatch<AppDispatch>()
     const { user, isAuthenticated, loading, error } = useSelector((state: RootState) => state.auth)
 
     const handleError = () => dispatch(clearError())
+
+    const register = async (role: UserRole, data: RegisterData) => {
+        return dispatch(registerUser({role, data})).unwrap()
+    }
 
     const login = async (role: UserRole, data: LoginData) => {
         return dispatch(loginUser({role, data})).unwrap()
@@ -28,6 +32,7 @@ export const useAuth = () => {
         loading,
         error,
         clearError: handleError,
+        register,
         login,
         logout,
         checkAuth,

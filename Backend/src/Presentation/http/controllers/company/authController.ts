@@ -32,7 +32,7 @@ export class CompanyAuthController {
         private _companyResetPasswordUsecase: ICompanyResetPasswordUsecase,
         private _companyRefreshTokenUsecase: ICompanyRefreshTokenUsecase,
         private _companyLogoutUsecase: ICompanyLogoutUsecase,
-        private _companyGoogleLogin: ICompanyGoogleLoginUsecase
+        private _companyGoogleLogin: ICompanyGoogleLoginUsecase,
     ) {}
 
     register = async (req: Request, res: Response, next: NextFunction) => {

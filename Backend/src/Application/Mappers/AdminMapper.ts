@@ -4,11 +4,13 @@ import { IAdmin } from "../../Infrastructure/database/Model/admin";
 export class AdminMapper {
     static toEntity(doc: IAdmin): AdminEntity {
         const admin = new AdminEntity(
-            doc._id.toString(),
             doc.name,
             doc.email,
             doc.password,
-            doc.role
+            doc.isVerified,
+            doc._id.toString(),
+            "",
+            doc.refreshTokens ?? []
         )
 
         return admin
@@ -16,9 +18,13 @@ export class AdminMapper {
 
     static toDocument(entity: AdminEntity){
         return {
-            name: entity.name,
-            email: entity.email,
-            role: entity.role
+            name: entity.getName(),
+            email: entity.getEmail(),
+            password: entity.getPassword(),
+            role: entity.getRole(),
+            googleId: entity.getGoogleId?.(),
+            isVerified: entity.isUserVerified(),
+            refreshTokens: entity.getRefreshToken()
         }
     }
 }

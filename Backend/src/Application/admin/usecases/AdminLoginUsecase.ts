@@ -25,7 +25,7 @@ export class AdminLoginUsecase implements IAdminLoginUsecase {
             throw new AppError(authMessages.error.ADMIN_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
-        const iValidPassword = await this._hashService.compare(request.password, admin.password)
+        const iValidPassword = await this._hashService.compare(request.password, admin.getPassword())
         if(!iValidPassword){
             throw new AppError(authMessages.error.INVALID_PASSWORD, statusCode.BAD_REQUEST)
         } 
@@ -36,7 +36,7 @@ export class AdminLoginUsecase implements IAdminLoginUsecase {
         }
 
         const refreshToken = this._tokenService.generateRefreshToken({id: id})
-        const accessToken = this._tokenService.generateAccessToken({id: id, email: admin.email, role: admin.role})
+        const accessToken = this._tokenService.generateAccessToken({id: id, email: admin.getEmail(), role: admin.getRole()})
 
         const hashedRefreshToken = this._hashService.hashToken(refreshToken)
         await this._adminRepository.updateToken(id, hashedRefreshToken)
@@ -44,6 +44,12 @@ export class AdminLoginUsecase implements IAdminLoginUsecase {
         return {
            accessToken,
            refreshToken,
+           admin: {
+            id,
+            email: admin.getEmail(),
+            name: admin.getName(),
+            role: admin.getRole()
+           }
         }
     }
 }

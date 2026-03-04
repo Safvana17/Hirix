@@ -10,7 +10,7 @@ import { IAdminLogoutUsecase } from "../../../../Application/admin/interfaces/IA
 export class AdminAuthController {
     constructor(
         private _loginUsecase: IAdminLoginUsecase,
-        private _logoutUsecase: IAdminLogoutUsecase
+        private _logoutUsecase: IAdminLogoutUsecase,
     ) {}
 
     login = async (req: Request, res: Response, next: NextFunction) => {
@@ -21,7 +21,7 @@ export class AdminAuthController {
                 password: parsed.password
             }
 
-            const {refreshToken, accessToken} = await this._loginUsecase.execute(payload)
+            const {refreshToken, accessToken, admin} = await this._loginUsecase.execute(payload)
 
             // const hashedToken = this.hashService.hashToken(refreshToken)
             // await this.adminRepository.updateToken(admin.id, hashedToken)
@@ -44,6 +44,7 @@ export class AdminAuthController {
 
             return res.status(statusCode.OK).json({
                 success: true,
+                admin,
                 message: authMessages.success.ADMIN_LOGIN_SUCCESS
             })
 

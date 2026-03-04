@@ -19,7 +19,7 @@ export class candidateMapper {
         return {
             name: entity.getName(),
             email: entity.getEmail(),
-            // password: entity.getPassword(),
+            password: entity.getPassword(),
             role: entity.getRole(),
             googleId: entity.getGoogleId?.(),
             isVerified: entity.isUserVerified(),

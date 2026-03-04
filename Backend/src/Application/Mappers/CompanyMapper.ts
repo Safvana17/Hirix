@@ -21,6 +21,7 @@ export class CompanyMapper {
             name: entity.getName(),
             email: entity.getEmail(),
             role: entity.getRole(),
+            password: entity.getPassword(),
             googleId: entity.getGoogleId?.(),
             isVerified: entity.isUserVerified(),
             refreshToken: entity.getRefreshToken()

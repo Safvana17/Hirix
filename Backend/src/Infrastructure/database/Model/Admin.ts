@@ -8,7 +8,8 @@ export interface IAdmin extends Document {
     email: string;
     password: string;
     role: userRole;
-    refreshTokens: string[]
+    refreshTokens: string[];
+    isVerified: boolean;
     createdAt: Date;
     updatedAt: Date
 }
@@ -36,6 +37,10 @@ const adminSchema: Schema<IAdmin> = new Schema({
         type: [String],
         default: []
     },
+    isVerified: {
+        type: Boolean,
+        default: false
+    }
 },{
     timestamps: true
 })

@@ -23,6 +23,7 @@ import { IGoogleLoginUsecase } from "../../../../Application/candidate/interface
 import userRole from "../../../../Domain/enums/userRole.enum";
 
 
+
 export class CandidateAuthController {
     constructor(
         private _registerUsecase: ICandidateRegisterUsecase,
@@ -33,7 +34,7 @@ export class CandidateAuthController {
         private _resetPasswordUsecase: IResetPasswordUsecase,
         private _refreshTokenUsecase: IRefreshTokenUsecase,
         private _logoutUsecase: ICandidateLogoutUsecase,
-        private _gooleLoginUsecase: IGoogleLoginUsecase
+        private _gooleLoginUsecase: IGoogleLoginUsecase,
     ) {}
 
 

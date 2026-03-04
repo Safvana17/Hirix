@@ -1,0 +1,15 @@
+import userRole from "../../../Domain/enums/userRole.enum";
+
+export interface UnifiedGetMeInputDTO {
+    id: string
+    role: userRole
+}
+
+export interface UnifiedGetMeOutputDTO {
+    user: {
+        id: string
+        name: string;
+        email: string;
+        role: userRole
+    }
+}

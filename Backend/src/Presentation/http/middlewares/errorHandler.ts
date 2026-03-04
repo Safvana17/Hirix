@@ -31,6 +31,7 @@ export const errorHandler: ErrorRequestHandler = (
         })
         return
     }else{
+      logger.error(error)
       res.status(500).json({
         success: false,
         message: authMessages.error.INTERNAL_SERVER_ERROR

@@ -3,6 +3,7 @@ import { redisClient } from "../../../Infrastructure/config/redis.config";
 import { CandidateAuthController } from "./candidate/authController";
 import { CompanyAuthController } from "./company/authController";
 import { AdminAuthController } from "./admin/authController";
+import { UnifiedAuthController } from "./common/unifiedAuthController";
 
 //use case
 import { RegisterCandidateUsecase } from "../../../Application/candidate/useCases/auth/RegisterCandidateUsecase";
@@ -24,6 +25,9 @@ import { CandidateLogoutUsecase } from "../../../Application/candidate/useCases/
 import { CompanyLogoutUsecase } from "../../../Application/company/usecases/CompanyLogoutUsecase";
 import { CandidateGoogleLoginUsecase } from "../../../Application/candidate/useCases/auth/GoogleLoginUsecase";
 import { CompanyGoogleLoginUsecase } from "../../../Application/company/usecases/company.googleLogin.usecase";
+import { UnifiedGetMeUsecase } from "../../../Application/common/usecases/unified.getme.usecase";
+
+
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidateRepository";
@@ -39,6 +43,10 @@ import { OtpService } from "../../../Infrastructure/services/OtpService";
 import { TokenService } from "../../../Infrastructure/services/TokenService";
 import { MailService } from "../../../Infrastructure/services/MailService";
 import { GoogleAuthService } from "../../../Infrastructure/services/GoogleAuthService";
+import userRole from "../../../Domain/enums/userRole.enum";
+import UserEntity from "../../../Domain/entities/user.entity";
+import { IBaseRepository } from "../../../Domain/repositoryInterface/IBaseRepository";
+
 
 
 
@@ -49,7 +57,7 @@ const iOtpRepository = new OtpRepository(redisClient)
 
 const iHashService = new HashService()
 const iOtpService = new OtpService()
-const iTokenService = new TokenService()
+export const iTokenService = new TokenService()
 const iMailService = new MailService()
 const iGoogleAuthService = new GoogleAuthService()
 
@@ -175,6 +183,7 @@ const iCompanyGoogleLogin = new CompanyGoogleLoginUsecase(
     iGoogleAuthService
 )
 
+
 //admin
 
 const iLoginAdmin = new AdminLoginUsecase(
@@ -188,6 +197,23 @@ const iLogoutAdmin = new AdminLogoutUsecase(
     iHashService
 )
 
+
+
+//unified
+
+const repositoryRegistry = new Map<userRole, IBaseRepository<UserEntity>>([
+    [userRole.Candidate, iCandidateRepository],
+    [userRole.Company, iCompanyRepository],
+    [userRole.Admin, iAdminRepository]
+]);
+
+
+const iUnifiedGetMe = new UnifiedGetMeUsecase(
+    repositoryRegistry
+)
+
+export const iGetMeController = new UnifiedAuthController(iUnifiedGetMe)
+
 export const iCandidateAuthController = new CandidateAuthController(
     iRegisterCandidate,
     iVerifyRegisterCandidate,
@@ -197,7 +223,7 @@ export const iCandidateAuthController = new CandidateAuthController(
     iResetPassword,
     iRefreshToken,
     iLogoutCandidate,
-    iCandidateGoogleLogin
+    iCandidateGoogleLogin,
 )
 
 export const iCompanyAuthController = new CompanyAuthController(
@@ -209,10 +235,11 @@ export const iCompanyAuthController = new CompanyAuthController(
     iCompanyResetPassword,
     iCompanyRefreshToken,
     iLogoutCompany,
-    iCompanyGoogleLogin
+    iCompanyGoogleLogin,
+  
 )
 
 export const iAdminAuthController = new AdminAuthController(
     iLoginAdmin,
-    iLogoutAdmin
+    iLogoutAdmin,
 )

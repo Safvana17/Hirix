@@ -1,21 +1,8 @@
 import userRole from "../enums/userRole.enum";
+import UserEntity from "./user.entity";
 
-export default class AdminEntity {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    role: userRole;
-    createdAt: Date;
-    updateAt: Date;
-
-    constructor(id: string, name: string, email: string, password: string, role: userRole){
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.createdAt = new Date();
-        this.updateAt = new Date()
+export default class AdminEntity extends UserEntity {
+    constructor(name: string, email: string, password: string,isVerified: boolean, id?: string, googleId?: string, refreshTokens: string[] = [] ){
+        super(name, email, password, isVerified, id, userRole.Admin, googleId, refreshTokens)
     }
 }

@@ -4,21 +4,21 @@ type AuthRole = 'candidate' | 'company'
 
 interface RoleSelectionProps {
     onSelect: (role: AuthRole) => void
-    mode: 'login' | 'signup'
+    // mode: 'login' | 'signup'
 }
 
-const RoleSelection: React.FC<RoleSelectionProps> = ({onSelect, mode}) => {
+const RoleSelection: React.FC<RoleSelectionProps> = ({onSelect}) => {
   return (
-    <div className='space-y-6'>
+    <div className='space-y-6 m-8'>
 
-        <p className='text-white text-center mb-8'>
+        {/* <p className='text-white text-center mb-8'>
             Please select how would you like to {mode === 'login' ? 'sign in' : 'register'}
-        </p>
+        </p> */}
 
-        <div className='space-x-4'>
+        <div className='space-y-4 grid p-3'>
             <button 
                onClick={() => onSelect('candidate')}
-               className='p-6 bg-white text-[#6B4705] rounded-xl hover:border-blue-500 transition text-left group'
+               className='p-6 h-32 bg-white text-[#6B4705] rounded-xl border border-transparent hover:border-blue-500 transition text-left group mb-5'
             >
                <div className='flex items-center justify-between'>
 
@@ -34,7 +34,7 @@ const RoleSelection: React.FC<RoleSelectionProps> = ({onSelect, mode}) => {
 
             <button 
                onClick={() => onSelect('company')}
-               className='p-6 bg-gray-600 border border=gray-600 rounded-2xl hover: border-blue-500 transition text-left group'
+               className='p-6 bg-white h-32 text-[#6B4705] rounded-xl border border-transparent hover:border-blue-500 transition text-left group mb-5'
             >
                <div className='flex items-center justify-between'>
 

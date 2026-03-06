@@ -24,7 +24,7 @@ const Navbar: React.FC= () => {
 
       <div className='flex items-center space-x-6 right-3'>
           <Link to="/login" className='text-white hover:text-gray-300 transition text-sm font-medium'>Login</Link>
-          <Link to="/signup" className='px-6 py-2 bg-[#9A6605] text-white rounded-lg hover:bg-amber-700 transition text-sm font-bold shadow-lg shadow-amber-900/20'>Sign Up</Link>
+          <Link to="/signup" className='px-6 py-2 bg-[#9A6605] text-white rounded-lg hover:bg-[#6B4705] transition text-sm font-bold shadow-lg shadow-amber-900/20'>Sign Up</Link>
       </div>
     </nav>
   )

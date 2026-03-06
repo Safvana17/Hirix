@@ -9,10 +9,10 @@ interface AuthLayoutProps {
 
 const AuthLayout: React.FC <AuthLayoutProps> = ({children, title, subtitle}) => {
   return (
-    <div className='min-h-screen bg-[#E6DECF] text-white flex item-center justify-center p-6'>
-      <div>
-          <div>
-            <div className="flex items-center gap-2">
+    <div className='min-h-screen bg-[#E6DECF] text-white flex items-center justify-center p-6'>
+      <div className='max-w-5xl'>
+        <div className='text-center mb-8'>
+            <div className="flex items-center justify-center gap-2">
               <img
                 src={HirixLogo}
                 alt="hirix_logo"
@@ -22,11 +22,11 @@ const AuthLayout: React.FC <AuthLayoutProps> = ({children, title, subtitle}) => 
                 HiriX
               </span>
             </div>
-              <h2 className='text-xl text-center text-black font-bold mb-1'>{title}</h2>
-              <p className='text-gray-400'>{subtitle}</p>
+              <h2 className='text-lg text-gray-600 font-medium'>{title}</h2>
+              <p className='text-gray-400 mb-5'>{subtitle}</p>
           </div>
 
-            <div className="bg-[#9A6605] p-8 rounded-sm">
+            <div className="bg-[#9A6605] rounded-md overflow-hidden shadow-xl">
                {children}
             </div>
         <div className="pt-8 text-center text-gray-500 text-xs">

@@ -7,8 +7,8 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     _retry: boolean
 }
 
-let logoutHandler: ((role: string) => void) | null = null
-export const setLogoutHandler = (handler: (role: string) => void) => {
+let logoutHandler: (() => void) | null = null
+export const setLogoutHandler = (handler: () => void) => {
     logoutHandler = handler
 }
 
@@ -38,12 +38,13 @@ const processQueue = (error: unknown) => {
 api.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {
+        console.log("Interceptor caught error:", error.response?.status)
         const originalRequest = error.config as CustomAxiosRequestConfig
-        const role = store.getState().auth.role
+        // const role = store.getState().auth.role
         if(error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes("/refresh")){
-            if(!role){
-                return Promise.reject(error)
-            }
+            // if(!role){
+            //     return Promise.reject(error)
+            // }
             
             if(isRefreshing){
                 return new Promise((resolve, reject) => {
@@ -54,20 +55,20 @@ api.interceptors.response.use(
             originalRequest._retry = true
             isRefreshing = true
 
-            let refreshUrl = ""
-            if(role === 'candidate') refreshUrl = '/candidate/refresh';
-            if(role === 'company') refreshUrl = '/company/refresh';
-            if(role === 'admin') refreshUrl = '/admin/refresh';
+            // let refreshUrl = ""
+            // if(role === 'candidate') refreshUrl = '/candidate/refresh';
+            // if(role === 'company') refreshUrl = '/company/refresh';
+            // if(role === 'admin') refreshUrl = '/admin/refresh';
 
             try {
-                await api.post(refreshUrl)
+                await api.post('/auth/refresh')
                 processQueue(null)
                 return api(originalRequest)
             } catch (refreshError) {
                 processQueue(refreshError)
                 // store.dispatch(logoutUser(role))
                 if(logoutHandler){
-                    logoutHandler(role)
+                    logoutHandler()
                 }
                 return Promise.reject(refreshError)
             }finally{

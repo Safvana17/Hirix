@@ -13,6 +13,9 @@ import ForgotPassword from '../presentation/pages/auth/ForgotPassword'
 import ResetPassword from '../presentation/pages/auth/ResetPassword'
 import AdminLogin from '../presentation/pages/auth/AdminLogin'
 import AdminDashboard from '../presentation/pages/admin/AdminDashboard'
+import PublicRoute from '../components/auth/PublicRoute'
+import RoleRoute from '../components/auth/RoleRoute'
+import { ROLES } from '../constants/role'
 
 const App = () => {
 
@@ -32,24 +35,36 @@ const App = () => {
         </div>
        }>
         <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/login' element={<AuthGatewayPage />}/>
-          <Route path='/signup' element={<AuthGatewayPage />}/>
+          <Route path='/' element={<PublicRoute><Home /></PublicRoute>} />
+          <Route path='/login' element={<PublicRoute><AuthGatewayPage /></PublicRoute>}/>
+          <Route path='/signup' element={<PublicRoute><AuthGatewayPage /> </PublicRoute>}/>
 
           <Route path='/company/verifyotp' element={<VerifyOtp />} />
           <Route path='/company/forgotpassword' element={<ForgotPassword />} />
           <Route path='/company/resetpassword' element={<ResetPassword />} />
-          <Route path='/company/dashboard' element={<CompanyDashboard />} />
+          <Route path='/company/dashboard' element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <CompanyDashboard />
+            </RoleRoute>
+          } />
 
 
           <Route path='/candidate/verifyotp' element={<VerifyOtp />} />
           <Route path='/candidate/forgotpassword' element={<ForgotPassword />} />
           <Route path='/candidate/resetpassword' element={<ResetPassword /> } />
-          <Route path='/candidate/dashboard' element={<CandidateDashboard />} />
+          <Route path='/candidate/dashboard' element={
+            <RoleRoute allowedRoles={[ROLES.CANDIDATE]}>
+              <CandidateDashboard />
+            </RoleRoute>
+          } />
 
 
-          <Route path='/admin/login' element={<AdminLogin />} />
-          <Route path='/admin/dashboard' element={<AdminDashboard /> } />
+          <Route path='/admin/login' element={<PublicRoute><AdminLogin /></PublicRoute>} />
+          <Route path='/admin/dashboard' element={
+            <RoleRoute allowedRoles={[ROLES.ADMIN]}>
+              <AdminDashboard /> 
+            </RoleRoute>
+          } />
           
         </Routes>
        </Suspense>

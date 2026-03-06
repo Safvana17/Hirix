@@ -56,40 +56,42 @@ const AdminLogin: React.FC= () => {
     }
   return (
     <AuthLayout title='Welcome, Nice to see you again' subtitle=''>
-      <div className='grid md:grid-cols-2 gap-0'>
-       <div>
+      <div className='grid grid-cols-1 md:grid-cols-2 min-h-[600px]'>
+       <div className='relative'>
          <img src={LoginBg} alt="Auth image" className='w-full h-full object-cover'/>
+         <div className="absolute inset-0 bg-[#9A6605] opacity-50" />
        </div>
-        <div>
+
+        <div className='bg-[#9A6605] p-8 md:p-12 flex flex-col justify-center'>
           <form onSubmit={handleSubmit} className='space-y-4'>
               <div>
-                <label className='block text-sm text-black font-medium mb-1'>Email</label>
+                <label className='block text-sm font-medium text-white mb-1'>Email</label>
                 <input 
                     type='email'
                     placeholder='example@gmail.com'
                     required
-                    className='w-full bg-white rounded-xl px-4 py-3 text-black '
+                    className='w-full bg-[#EDE0E0] rounded-xl px-4 py-3 text-black focus:outline-none transition'
                     onChange={(e) => setFormData({...formData, email: e.target.value }) }
                 />
-                {error.email && <p className='text-red-500 text-sm'>{error.email}</p>}
+                {error.email && <p className='text-[#FBBEBE] text-sm'>{error.email}</p>}
               </div>
 
               <div>
-                <label className='block text-sm text-black font-medium mb-1'>Password</label>
+                <label className='block text-sm text-white font-medium mb-1'>Password</label>
                 <input 
                     type='password'
                     placeholder='••••••••'
                     required
-                    className='w-full bg-white rounded-xl px-4 py-3 text-black '
+                    className='w-full bg-[#EDE0E0] rounded-xl px-4 py-3 text-black focus:outline-none transition'
                     onChange={(e) => setFormData({...formData, password: e.target.value }) }
                 />
-                {error.password && <p className='text-red-500 text-sm'>{error.password}</p>}
+                {error.password && <p className='text-[#FBBEBE] text-sm'>{error.password}</p>}
               </div>
 
               <button
                 type='submit'
                 disabled={loading}
-                className='w-50 bg-[#E9C788] rounded-xl text-white font-bold disabled:opacity-50'
+                className='cursor-pointer w-full bg-[#E9C788] hover:bg-[#6B4705] text-white font-bold py-3 rounded-xl mt-4 transition duration-200 disabled:opacity-50 shadow-lg shadow-blue-900/20'
               >
                 {loading ? 'logging...' : 'Login'}
               </button>

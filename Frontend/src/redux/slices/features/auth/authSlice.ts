@@ -10,7 +10,7 @@ const initialState: AuthState = {
     user: null,
     loading: true,
     error: null,
-    role: (localStorage.getItem('userRole') as UserRole) || null,
+    role:  null,
     isAuthenticated: false
 }
 
@@ -70,13 +70,33 @@ export const loginUser = createAsyncThunk<
     }
 })
 
+export const googleLogin = createAsyncThunk<
+{user: User, role: UserRole}, {role: UserRole,token: string}, {rejectValue: string}
+>('/auth/googlelogin', async({role,token}, {rejectWithValue}) => {
+    try {
+        const response = await api.post<{
+            candidate?: User,
+            company?: User
+        }>(`/auth/${role}/googlelogin`, {role, token})
+
+        const user = response.data.candidate || response.data.company
+        if(!user){
+            return rejectWithValue('Invalid response')
+        }
+
+        return {user, role}
+    } catch (error) {
+        return rejectWithValue(`failed to goole login: ${error}`)
+    }
+})
+
 export const logoutUser = createAsyncThunk <
 void,
-UserRole,
+void,
 {rejectValue: string}
-> ('auth/logout', async(role, {rejectWithValue}) => {
+> ('auth/logout', async(_, {rejectWithValue}) => {
     try {
-        await api.post(`/${role}/logout`)
+        await api.post(`/auth/logout`)
     } catch (error) {
         return rejectWithValue(`Logout failed: ${error}`)
     }
@@ -107,6 +127,7 @@ export const getMe = createAsyncThunk <
                 if(!user){
                     return rejectWithValue("Invalid session response")
                 }
+                
                 return {user}
             } catch (error) {
                 return rejectWithValue(`session expired: ${error}`)
@@ -200,7 +221,7 @@ const authSlice = createSlice({
             state.role = action.payload.role;
             state.isAuthenticated = true
 
-            localStorage.setItem('userRole', action.payload.role)
+            // localStorage.setItem('userRole', action.payload.role)
         })
         .addCase(registerUser.rejected, (state, action) => {
             state.loading = false;
@@ -216,7 +237,7 @@ const authSlice = createSlice({
             state.role = action.payload.role
             state.isAuthenticated = true
 
-            localStorage.setItem('userRole', action.payload.role)
+            // localStorage.setItem('userRole', action.payload.role)
         })
         .addCase(loginUser.rejected, (state, action) => {
             state.loading = false;
@@ -232,7 +253,7 @@ const authSlice = createSlice({
             state.isAuthenticated = false;
             state.role = null
 
-            localStorage.removeItem("userRole")
+            // localStorage.removeItem("userRole")
         })
 
         .addCase(getMe.pending, (state) => {
@@ -240,14 +261,31 @@ const authSlice = createSlice({
             state.error = null;
         })
         .addCase(getMe.fulfilled, (state, action) => {
+            console.log('payload from getme: ', action.payload)
             state.loading = false;
-            state.user = action.payload.user;
+            state.user = action.payload.user
+            state.role = action.payload.user.role
             state.isAuthenticated = true
         })
-        .addCase(getMe.rejected, (state) => {
+        .addCase(getMe.rejected, (state, action) => {
+            console.log("getMe failed:", action.error)
             state.loading = false;
             state.user = null;
             state.isAuthenticated = false;
+        })
+        .addCase(googleLogin.pending, (state) => {
+            state.loading = true
+            state.error = null
+        })
+        .addCase(googleLogin.fulfilled, (state, action) => {
+            state.loading = false
+            state.isAuthenticated = true
+            state.user = action.payload.user
+            state.role = action.payload.role
+        })
+        .addCase(googleLogin.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Error during google login'
         })
         .addCase(verifyOtp.pending, (state) => {
             state.loading = true

@@ -34,34 +34,37 @@ const ForgotPassword: React.FC= () => {
 
   return (
     <AuthLayout title='Forgot Password' subtitle='Enter your email to reset your password'> 
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label className='block text-sm font-medium text-white mb-2'>Email</label>
+     <div className='px-10 py-10 text-white '>
+        <form onSubmit={handleSubmit} className='space-y-6 max-w-xl mx-auto'>
+            <div className='space-y-2'>
+                <label className='block text-sm font-medium'>Email</label>
                 <input
                    type='email'
                    value={email}
                    onChange={(e) => setEmail(e.target.value)}
                    placeholder='name@gmail.com'
-                   className='bg-white w-full rounded-xl px-4 py-3 text-black '
+                   className='w-full bg-[#EDE0E0] rounded-xl px-4 py-3 text-black focus:outline-none focus:ring-[#E9C788] '
                    required
                 />
             </div>
-            {error && <p className='text-red-500 text-sm'>{error}</p>}
+            {error && <p className='text-[#FBBEBE] text-sm'>{error}</p>}
             {/* {message && <p className='text-green-500 text-sm'>{message}</p>} */}
 
-            <button 
-               type='submit'
-               disabled={loading}
-               className='w-40 bg-[#E9C788] text-white rounded-xl disabled:opacity-50'>
-                {loading? 'Sending...' : 'Send OTP'}
-            </button>
-
+           <div className='flex justify-center'>
+                <button 
+                type='submit'
+                disabled={loading}
+                className='w-full bg-[#E9C788] hover:bg-[#6B4705] font-bold p-3 rounded-xl transition disabled:opacity-50'>
+                    {loading? 'Sending...' : 'Send OTP'}
+                </button>
+            </div>
             <div className='text-center text-sm'>
-                <Link to={`/${role}/login`} className='text-black'>
+                <Link to={`/${role}/login`} className='hover:underline'>
                    Back to login
                 </Link>
             </div>
         </form>
+     </div>
     </AuthLayout>
   )
 }

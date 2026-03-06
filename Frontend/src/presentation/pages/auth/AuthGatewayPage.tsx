@@ -27,7 +27,7 @@ const AuthGatewayPage: React.FC = () => {
             }
         }
         return {
-            title: 'Join Hirix',
+            title: '',
             subTitle: role ? `Resgister as a ${role}` : 'Choose how you want to join our platform'
         }
     }
@@ -36,7 +36,7 @@ const AuthGatewayPage: React.FC = () => {
   return (
     <AuthLayout title={title} subtitle={subTitle}>
        {!role ? (
-           <RoleSelection mode={mode} onSelect={(selectedRole) => setRole(selectedRole)}/>
+           <RoleSelection onSelect={(selectedRole) => setRole(selectedRole)}/>
        ): (
            <AuthForm mode={mode} role={role} onBack={() => setRole(null)}/>
        )}

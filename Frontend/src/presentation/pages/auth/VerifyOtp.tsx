@@ -43,7 +43,7 @@ const VerifyOtp: React.FC = () => {
     const formatTime = (seconds: number) => {
         const minutes = Math.floor(seconds/ 60)
         const remainingSeconds = Math.floor(seconds % 60)
-        return `${minutes} :${remainingSeconds < 10 ? '0' : ''}${remainingSeconds} `
+        return `0${minutes} :${remainingSeconds < 10 ? ' 0' : ' '}${remainingSeconds} `
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -109,8 +109,9 @@ const VerifyOtp: React.FC = () => {
 
     return (
     <AuthLayout title='Verify OTP' subtitle={`Enter the email sent to ${email}`}>
-      <form onSubmit={handleSubmit} className='space-y-8'>
-        <div className='flex justify-between gap-2'>
+     <div className='flex justify-center'>
+      <form onSubmit={handleSubmit} className='p-10 text-white space-y-8'>
+        <div className='flex justify-between gap-3'>
          { otp.map((data, index) => (
             <input 
                key={index}
@@ -128,22 +129,23 @@ const VerifyOtp: React.FC = () => {
          ))}
         </div>
         <div>
-            <p>Remaining Time: <span>{formatTime(timeLeft)}</span></p>
-            <div className="text-center text-sm text-gray-400">
-                Didn't receive the code?{' '}
-                <button type="button" onClick={handleResendOtp} className='text--400 hover:underline font-medium'>
-                    Resend OTP
-                </button>
-            </div>
-
+            <p className='text-gray-300'>Remaining Time: <span className='text-white font-bold text-xl'>{formatTime(timeLeft)}</span></p>
         </div>
 
         {error && <p className='text-red-600 text-sm '>{error}</p>}
-
-        <button type='submit' disabled={loading || otp.join('').length < 6} className='w-30 bg-[#EECA88] hover:bg-white text-white font-bold hover:text-[#EECA88] py-4 rounded-xl transition duration-200 disabled:opacity-50'>
+        <div className='text-center'> 
+        <button type='submit' disabled={loading || otp.join('').length < 6} className='w-30 bg-[#E9C788] hover:bg-[#6B4705] text-white font-bold py-4 rounded-xl transition duration-200'>
             {loading ? 'Verifying...' : 'Verify OTP'}
         </button>
+        </div>
+            <div className="text-center text-sm text-gray-300">
+                Didn't receive the code?{' '}
+                <button type="button" onClick={handleResendOtp} className='text-white hover:underline font-medium'>
+                    Resend OTP
+                </button>
+            </div>
       </form>
+      </div>
     </AuthLayout>
   )
 }

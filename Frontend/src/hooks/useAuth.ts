@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import {type AppDispatch, type RootState } from "../redux/store"
-import { clearError, getMe, loginUser, logoutUser, registerUser } from "../redux/slices/authSlice"
+import { clearError, getMe, loginUser, logoutUser, registerUser } from "../redux/slices/features/auth/authSlice"
 import type { UserRole } from "../constants/role"
 import type { LoginData, RegisterData } from "../types/user"
 
@@ -18,8 +18,8 @@ export const useAuth = () => {
         return dispatch(loginUser({role, data})).unwrap()
     }
 
-    const logout = async(role: UserRole) => {
-        return dispatch(logoutUser(role)).unwrap()
+    const logout = async() => {
+        return dispatch(logoutUser()).unwrap()
     }
 
     const checkAuth = async () => {

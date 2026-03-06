@@ -76,40 +76,41 @@ const ResetPassword: React.FC = () => {
 
   return (
     <AuthLayout title='Reset Passwrd' subtitle='Enter your nw password'>
-      <div className='grid md:grid-cols-2 gap-0'>
-       <div>
+      <div className='grid grid-cols-1 md:grid-cols-2 min-h-[600px]'>
+       <div className='relative h-full'>
          <img src={ForgotPasswordImage} alt="Auth image" className='w-full h-full object-cover'/>
+         <div className="absolute inset-0 bg-[#9A6605] opacity-50" />
        </div>
-        <div>
+        <div className='bg-[#9A6605] p-8 md:p-12 flex flex-col justify-center'>
           <form onSubmit={handleSubmit} className='space-y-4'>
               <div>
-                <label className='block text-sm text-black font-medium mb-1'>New Password</label>
+                <label className='block text-sm text-white font-medium mb-1'>New Password</label>
                 <input 
                     type='password'
                     placeholder='••••••••'
                     required
-                    className='w-full bg-white rounded-xl px-4 py-3 text-black '
+                    className='w-full bg-[#EDE0E0] rounded-xl px-4 py-3 text-black outline-none'
                     onChange={(e) => setFormData({...formData, newPassword: e.target.value }) }
                 />
-                {localError.newPassword && <p className='text-red-500 text-sm'>{localError.newPassword}</p>}
+                {localError.newPassword && <p className='text-[#FBBEBE] text-sm'>{localError.newPassword}</p>}
               </div>
 
               <div>
-                <label className='block text-sm text-black font-medium mb-1'>Confirm Password</label>
+                <label className='block text-sm text-white font-medium mb-1'>Confirm Password</label>
                 <input 
                     type='password'
                     placeholder='••••••••'
                     required
-                    className='w-full bg-white rounded-xl px-4 py-3 text-black '
+                    className='w-full bg-[#EDE0E0] rounded-xl px-4 py-3 text-black outline-none'
                     onChange={(e) => setFormData({...formData, confirmPassword: e.target.value }) }
                 />
-                {localError.confirmPassword && <p className='text-red-500 text-sm'>{localError.confirmPassword}</p>}
+                {localError.confirmPassword && <p className='text-[#FBBEBE] text-sm'>{localError.confirmPassword}</p>}
               </div>
 
               <button
                 type='submit'
                 disabled={loading}
-                className='w-50 bg-[#E9C788] rounded-xl text-white font-bold disabled:opacity-50'
+                className='cursor-pointer w-full bg-[#E9C788] hover:bg-[#6B4705] py-3 mt-3 rounded-xl text-white font-bold'
               >
                 {loading ? 'Resetting...' : 'Reset Password'}
               </button>

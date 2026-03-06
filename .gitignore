@@ -1,9 +1,14 @@
+# Environment variables
 .env
 Backend/.env
 Frontend/.env
-node_modules/
 Backend/node_modules/
 dist/
 build/
 logs/
 *.log
+# Dependencies
+node_modules/
+
+
+

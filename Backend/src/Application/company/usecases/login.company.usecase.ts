@@ -1,10 +1,10 @@
-import { AppError } from "../../../Domain/errors/AppError";
-import ICompanyRepository from "../../../Domain/repositoryInterface/ICompanyRepository";
+import { AppError } from "../../../Domain/errors/app.error";
+import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../Shared/Enumes/statusCode";
 import { IHashService } from "../../interface/service/IHashService";
 import { ITokenService } from "../../interface/service/ITokenService";
-import { LoginCompanyInputDTO, LoginCompanyOutputDTO } from "../dtos/LoginCompanyDTO";
+import { LoginCompanyInputDTO, LoginCompanyOutputDTO } from "../dtos/login.company.dto";
 import { ILoginCompanyUsecase } from "../interfaces/auth/ILoginCompanyUsecase";
 
 export class LoginCompanyUsecase implements ILoginCompanyUsecase{

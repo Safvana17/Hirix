@@ -1,11 +1,11 @@
-import { AppError } from "../../../Domain/errors/AppError";
-import ICompanyRepository from "../../../Domain/repositoryInterface/ICompanyRepository";
+import { AppError } from "../../../Domain/errors/app.error";
+import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../Shared/Enumes/statusCode";
 import { IHashService } from "../../interface/service/IHashService";
 import { IOtpService } from "../../interface/service/IOtpService";
 import { IOtpStore } from "../../interface/service/IOtpStore";
-import { CompanyResetPasswordInputDTO, CompanyResetPasswordOutputDTO } from "../dtos/CompanyResetPasswordDTO";
+import { CompanyResetPasswordInputDTO, CompanyResetPasswordOutputDTO } from "../dtos/resetPassword.company.dto";
 import { ICompanyResetPasswordUsecase } from "../interfaces/auth/ICompanyResetPasswordUsecase";
 
 export class CompanyResetPasswordUsecase implements ICompanyResetPasswordUsecase{

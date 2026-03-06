@@ -1,11 +1,11 @@
-import { AppError } from "../../../Domain/errors/AppError";
-import ICompanyRepository from "../../../Domain/repositoryInterface/ICompanyRepository";
+import { AppError } from "../../../Domain/errors/app.error";
+import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../Shared/Enumes/statusCode";
 import { IMailService } from "../../interface/service/IMailService";
 import { IOtpService } from "../../interface/service/IOtpService";
 import { IOtpStore } from "../../interface/service/IOtpStore";
-import { CompanyForgotPasswordInputDTO, CompanyForgotPasswordOutputDTO } from "../dtos/CompanyForgotPasswordDTO";
+import { CompanyForgotPasswordInputDTO, CompanyForgotPasswordOutputDTO } from "../dtos/forgotPassword.company.dto";
 import { ICompanyForgotPasswordUsecase } from "../interfaces/auth/ICompanyForgotPasswordUsecase";
 
 export class CompanyForgotPasswordUsecase implements ICompanyForgotPasswordUsecase{

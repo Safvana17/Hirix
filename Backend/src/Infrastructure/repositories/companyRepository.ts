@@ -1,8 +1,8 @@
-import { CompanyMapper } from "../../Application/Mappers/CompanyMapper";
+import { CompanyMapper } from "../../Application/Mappers/mapper.company";
 import CompanyEntity from "../../Domain/entities/company.entity";
-import ICompanyRepository from "../../Domain/repositoryInterface/ICompanyRepository";
+import ICompanyRepository from "../../Domain/repositoryInterface/iCompany.repository";
 import { companyModel, ICompany } from "../database/Model/company";
-import { BaseRepository } from "./baseRepository";
+import { BaseRepository } from "./base.repository";
 
 export class CompanyRepository extends BaseRepository<CompanyEntity, ICompany> implements ICompanyRepository {
 

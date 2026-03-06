@@ -1,5 +1,5 @@
-import { AppError } from "../../../../Domain/errors/AppError";
-import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
+import { AppError } from "../../../../Domain/errors/app.error";
+import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { RefreshTokenInputDTO, RefreshTokenOutputDTO } from "../../dtos/RefreshTokenDTO";

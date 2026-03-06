@@ -1,10 +1,10 @@
-import { AppError } from "../../../../Domain/errors/AppError";
-import IAdminRepository from "../../../../Domain/repositoryInterface/IAdminRepository";
+import { AppError } from "../../../../Domain/errors/app.error";
+import IAdminRepository from "../../../../Domain/repositoryInterface/iAdmin.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IHashService } from "../../../interface/service/IHashService";
 import { ITokenService } from "../../../interface/service/ITokenService";
-import { AdminRefreshTokenInputDTO, AdminRefreshTokenOutputDTO } from "../../dtos/auth/AdminRefreshTokenDTO";
+import { AdminRefreshTokenInputDTO, AdminRefreshTokenOutputDTO } from "../../dtos/auth/refreshToken.admin.dto";
 import { IAdminRefreshTokenUsecase } from "../../interfaces/auth/IAdminRefreshTokenUsecase";
 
 export class AdminRefreshTokenUsecase implements IAdminRefreshTokenUsecase{

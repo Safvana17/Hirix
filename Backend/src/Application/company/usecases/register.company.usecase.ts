@@ -1,13 +1,13 @@
 import CompanyEntity from "../../../Domain/entities/company.entity";
-import { AppError } from "../../../Domain/errors/AppError";
-import ICompanyRepository from "../../../Domain/repositoryInterface/ICompanyRepository";
+import { AppError } from "../../../Domain/errors/app.error";
+import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../Shared/Enumes/statusCode";
 import { IHashService } from "../../interface/service/IHashService";
 import { IMailService } from "../../interface/service/IMailService";
 import { IOtpService } from "../../interface/service/IOtpService";
 import { IOtpStore } from "../../interface/service/IOtpStore";
-import { RegisterCompanyInputDTO, RegisterCompanyOutputDTO } from "../dtos/RegisterCompanyDTO";
+import { RegisterCompanyInputDTO, RegisterCompanyOutputDTO } from "../dtos/register.company.dto";
 import { ICompanyRegisterUsecase } from "../interfaces/auth/ICompanyRegisterUsecase";
 
 export class RegisterCompanyUsecase implements ICompanyRegisterUsecase {

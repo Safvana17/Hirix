@@ -1,10 +1,10 @@
-import { AppError } from "../../../Domain/errors/AppError";
-import ICompanyRepository from "../../../Domain/repositoryInterface/ICompanyRepository";
+import { AppError } from "../../../Domain/errors/app.error";
+import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../Shared/Enumes/statusCode";
 import { IOtpService } from "../../interface/service/IOtpService";
 import { IOtpStore } from "../../interface/service/IOtpStore";
-import { VerifyCompanyInputDTO, VerifyCompanyOutputDTO } from "../dtos/VerifyCompanyDTO";
+import { VerifyCompanyInputDTO, VerifyCompanyOutputDTO } from "../dtos/verifyRegister.company.dto";
 import { IVerifyRegisterCompanyUsecase } from "../interfaces/auth/ICompanyVerifyRegisterUsecase";
 
 export class VerifyRegisterCompanyUsecase implements IVerifyRegisterCompanyUsecase{

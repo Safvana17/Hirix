@@ -1,10 +1,10 @@
-import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
-import { verifyRegisterCandidateOtpInputDTO, verifyRegisterCandidateOtpOutputDTO } from "../../dtos/VerifyRegisterCandidateOtpDTO";
+import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
+import { verifyRegisterCandidateOtpInputDTO, verifyRegisterCandidateOtpOutputDTO } from "../../dtos/verifyRegister.candidate.dto";
 import { IVerifyRegisterCandidate } from "../../interfaces/auth/IVerifyRegisterCandidate";
 import { IOtpService } from "../../../interface/service/IOtpService";
 import { IOtpStore } from "../../../interface/service/IOtpStore";
 import { ITokenService } from "../../../interface/service/ITokenService";
-import { AppError } from "../../../../Domain/errors/AppError";
+import { AppError } from "../../../../Domain/errors/app.error";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 

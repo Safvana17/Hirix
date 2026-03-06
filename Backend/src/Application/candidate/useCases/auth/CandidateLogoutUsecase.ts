@@ -1,4 +1,4 @@
-import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
+import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
 import { IHashService } from "../../../interface/service/IHashService";
 import { ICandidateLogoutUsecase } from "../../interfaces/auth/ICandidateLogoutUsecase";
 

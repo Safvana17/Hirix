@@ -1,5 +1,5 @@
 import { AccessTokenPayload, ITokenService, RefreshTokenPayload } from "../../Application/interface/service/ITokenService";
-import { AppError } from "../../Domain/errors/AppError";
+import { AppError } from "../../Domain/errors/app.error";
 import { authMessages } from "../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../Shared/Enumes/statusCode";
 import { jwtConfig } from "../config/jwt.config";

@@ -1,4 +1,4 @@
-import { AdminRefreshTokenInputDTO, AdminRefreshTokenOutputDTO } from "../../dtos/auth/AdminRefreshTokenDTO";
+import { AdminRefreshTokenInputDTO, AdminRefreshTokenOutputDTO } from "../../dtos/auth/refreshToken.admin.dto";
 
 
 export interface IAdminRefreshTokenUsecase{

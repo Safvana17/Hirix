@@ -1,4 +1,4 @@
-import IAdminRepository from "../../../../Domain/repositoryInterface/IAdminRepository";
+import IAdminRepository from "../../../../Domain/repositoryInterface/iAdmin.repository";
 import { IAdminLogoutUsecase } from "../../interfaces/auth/IAdminLogoutUsecase";
 import { IHashService } from "../../../interface/service/IHashService";
 

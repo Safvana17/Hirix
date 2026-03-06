@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { AccessTokenPayload, ITokenService } from "../../../Application/interface/service/ITokenService";
-import { AppError } from "../../../Domain/errors/AppError";
+import { AppError } from "../../../Domain/errors/app.error";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../Shared/Enumes/statusCode";
 import { TokenExpiredError } from "jsonwebtoken";

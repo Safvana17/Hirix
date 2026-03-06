@@ -1,6 +1,6 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import { logger } from "../../../utils/logging/loger";
-import { AppError } from "../../../Domain/errors/AppError";
+import { AppError } from "../../../Domain/errors/app.error";
 import { ZodError } from "zod";
 import { statusCode } from "../../../Shared/Enumes/statusCode";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";

@@ -1,10 +1,10 @@
-import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
-import { ForgotPasswordInputDTO, ForgotPasswordOutputDTO } from "../../dtos/ForgotPasswordDTO";
+import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
+import { ForgotPasswordInputDTO, ForgotPasswordOutputDTO } from "../../dtos/forgotpassword.candidate.dto";
 import { IForgotPasswordUsecase } from "../../interfaces/auth/IForgotPasswordUsecase";
 import { IMailService } from "../../../interface/service/IMailService";
 import { IOtpService } from "../../../interface/service/IOtpService";
 import { IOtpStore } from "../../../interface/service/IOtpStore";
-import { AppError } from "../../../../Domain/errors/AppError";
+import { AppError } from "../../../../Domain/errors/app.error";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 

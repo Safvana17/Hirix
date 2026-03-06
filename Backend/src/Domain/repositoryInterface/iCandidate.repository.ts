@@ -1,5 +1,5 @@
 import CandidateEntity from "../entities/candidate.entity";
-import { IBaseRepository } from "./IBaseRepository";
+import { IBaseRepository } from "./iBase.repository";
 
 export default interface ICandidateRepository extends IBaseRepository <CandidateEntity> {
     findByEmail(email: string): Promise<CandidateEntity | null>;

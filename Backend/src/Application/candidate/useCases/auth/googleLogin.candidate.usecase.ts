@@ -1,14 +1,14 @@
 import CandidateEntity from "../../../../Domain/entities/candidate.entity";
 import userRole from "../../../../Domain/enums/userRole.enum";
-import { AppError } from "../../../../Domain/errors/AppError";
-import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
+import { AppError } from "../../../../Domain/errors/app.error";
+import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { logger } from "../../../../utils/logging/loger";
 import { IGoogleAuthService } from "../../../interface/service/IGoogleAuthService";
 import { IHashService } from "../../../interface/service/IHashService";
 import { ITokenService } from "../../../interface/service/ITokenService";
-import { LoginCandidateOutputDTO } from "../../dtos/LoginCandidateDTO";
+import { LoginCandidateOutputDTO } from "../../dtos/login.candidate.dto";
 import { IGoogleLoginUsecase } from "../../interfaces/auth/IGoogleLoginUsecase";
 
 export class CandidateGoogleLoginUsecase implements IGoogleLoginUsecase{
@@ -38,7 +38,7 @@ export class CandidateGoogleLoginUsecase implements IGoogleLoginUsecase{
             candidate = await this._candidateRepository.create(newCandidate)
         }else{
             if(!candidate.getGoogleId()){
-                candidate = await this._candidateRepository.updateGoogleId(googleCandidateInfo.email, googleCandidateInfo.getGoogleId) || candidate
+                candidate = await this._candidateRepository.updateGoogleId(googleCandidateInfo.email, googleCandidateInfo.googleId) || candidate
             }else if(candidate.getGoogleId() !== googleCandidateInfo.googleId){
                 throw new AppError(authMessages.error.INVALID_GOOGLE_ID, statusCode.BAD_REQUEST)
             }

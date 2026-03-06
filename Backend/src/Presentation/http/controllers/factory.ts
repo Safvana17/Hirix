@@ -6,19 +6,19 @@ import { AdminAuthController } from "./admin/authController";
 import { UnifiedAuthController } from "./common/unifiedAuthController";
 
 //use case
-import { RegisterCandidateUsecase } from "../../../Application/candidate/useCases/auth/RegisterCandidateUsecase";
-import { VerifyRegisterCandidateOtpUsecase } from "../../../Application/candidate/useCases/auth/VerifyRegisterCandidateOtpUsecase";
-import { ForgotPasswordUsecase  } from "../../../Application/candidate/useCases/auth/ForgotPasswordUsecase";
-import { ResetPasswordUsecase } from "../../../Application/candidate/useCases/auth/ResetPasswordUsecase";
-import { LoginCandidateUsecase } from "../../../Application/candidate/useCases/auth/LoginCandidateUsecase";
-import { ResendOtpUsecase } from "../../../Application/candidate/useCases/auth/ResendOtpUsecase";
-import { RegisterCompanyUsecase } from "../../../Application/company/usecases/RegisterCompanyUsecase";
-import { VerifyRegisterCompanyUsecase } from "../../../Application/company/usecases/VerifyCompanyUsecase";
-import { ResendOtpCompanyUsecase } from "../../../Application/company/usecases/ResendOtpCompanyUsecase";
-import { LoginCompanyUsecase } from "../../../Application/company/usecases/LoginCompanyUsecase";
-import { CompanyForgotPasswordUsecase } from "../../../Application/company/usecases/CompanyForgotPasswordUsecase";
-import { CompanyResetPasswordUsecase } from "../../../Application/company/usecases/CompanyResetPasswordUsecase";
-import { CandidateGoogleLoginUsecase } from "../../../Application/candidate/useCases/auth/GoogleLoginUsecase";
+import { RegisterCandidateUsecase } from "../../../Application/candidate/useCases/auth/register.candidate.usecase";
+import { VerifyRegisterCandidateOtpUsecase } from "../../../Application/candidate/useCases/auth/verifyRegister.candidate.usecase";
+import { ForgotPasswordUsecase  } from "../../../Application/candidate/useCases/auth/forgotPassword.candidate.usecase";
+import { ResetPasswordUsecase } from "../../../Application/candidate/useCases/auth/resetPassword.candidate.usecase";
+import { LoginCandidateUsecase } from "../../../Application/candidate/useCases/auth/login.candidate.usecase";
+import { ResendOtpUsecase } from "../../../Application/candidate/useCases/auth/resendOtp.candidate.usecase";
+import { RegisterCompanyUsecase } from "../../../Application/company/usecases/register.company.usecase";
+import { VerifyRegisterCompanyUsecase } from "../../../Application/company/usecases/verifyRegister.company.usecase";
+import { ResendOtpCompanyUsecase } from "../../../Application/company/usecases/resendOtp.company.usecase";
+import { LoginCompanyUsecase } from "../../../Application/company/usecases/login.company.usecase";
+import { CompanyForgotPasswordUsecase } from "../../../Application/company/usecases/forgotPassword.company.usecase";
+import { CompanyResetPasswordUsecase } from "../../../Application/company/usecases/resetPassword.company.usecase";
+import { CandidateGoogleLoginUsecase } from "../../../Application/candidate/useCases/auth/googleLogin.candidate.usecase";
 import { CompanyGoogleLoginUsecase } from "../../../Application/company/usecases/company.googleLogin.usecase";
 import { UnifiedGetMeUsecase } from "../../../Application/common/usecases/unified.getme.usecase";
 import { UnifiedRefreshTokenUsecase } from "../../../Application/common/usecases/unified.refreshToken.usecase";
@@ -27,11 +27,11 @@ import { UnifiedRefreshTokenUsecase } from "../../../Application/common/usecases
 
 
 //repositories
-import { CandidateRepository } from "../../../Infrastructure/repositories/candidateRepository";
+import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
 import { OtpRepository } from "../../../Infrastructure/services/OtpStore";
 import { AdminLoginUsecase } from "../../../Application/admin/usecases/auth/AdminLoginUsecase";
 import { CompanyRepository } from "../../../Infrastructure/repositories/companyRepository";
-import { AdminRepository } from "../../../Infrastructure/repositories/adminRepository";
+import { AdminRepository } from "../../../Infrastructure/repositories/admin.repository";
 
 
 //services
@@ -42,7 +42,7 @@ import { MailService } from "../../../Infrastructure/services/MailService";
 import { GoogleAuthService } from "../../../Infrastructure/services/GoogleAuthService";
 import userRole from "../../../Domain/enums/userRole.enum";
 import UserEntity from "../../../Domain/entities/user.entity";
-import { IBaseRepository } from "../../../Domain/repositoryInterface/IBaseRepository";
+import { IBaseRepository } from "../../../Domain/repositoryInterface/iBase.repository";
 import { UnifiedLogoutUsecase } from "../../../Application/common/usecases/unified.logout.usecase";
 
 

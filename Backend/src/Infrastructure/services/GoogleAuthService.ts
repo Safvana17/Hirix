@@ -1,8 +1,8 @@
-import { GoogleAuthDTO } from "../../Application/candidate/dtos/LoginCandidateDTO";
+import { GoogleAuthDTO } from "../../Application/candidate/dtos/login.candidate.dto";
 import { IGoogleAuthService } from "../../Application/interface/service/IGoogleAuthService";
 import { OAuth2Client } from "google-auth-library";
 import { env } from "../config/env";
-import { AppError } from "../../Domain/errors/AppError";
+import { AppError } from "../../Domain/errors/app.error";
 import { authMessages } from "../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../Shared/Enumes/statusCode";
 import { logger } from "../../utils/logging/loger";

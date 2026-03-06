@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { IAdminLoginUsecase } from "../../../../Application/admin/interfaces/auth/IAdminLoginUsecase";
 import { loginSchema } from "../../validators/loginValidator";
-import { LoginAdminInputDto } from "../../../../Application/admin/dtos/auth/LoginAdminDTO";
+import { LoginAdminInputDto } from "../../../../Application/admin/dtos/auth/login.admin.dto";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { env } from "../../../../Infrastructure/config/env";

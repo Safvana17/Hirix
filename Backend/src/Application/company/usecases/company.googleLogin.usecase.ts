@@ -1,14 +1,14 @@
 import CompanyEntity from "../../../Domain/entities/company.entity";
 import userRole from "../../../Domain/enums/userRole.enum";
-import { AppError } from "../../../Domain/errors/AppError";
-import ICompanyRepository from "../../../Domain/repositoryInterface/ICompanyRepository";
+import { AppError } from "../../../Domain/errors/app.error";
+import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../Shared/Enumes/statusCode";
 import { logger } from "../../../utils/logging/loger";
 import { IGoogleAuthService } from "../../interface/service/IGoogleAuthService";
 import { IHashService } from "../../interface/service/IHashService";
 import { ITokenService } from "../../interface/service/ITokenService";
-import { LoginCompanyOutputDTO } from "../dtos/LoginCompanyDTO";
+import { LoginCompanyOutputDTO } from "../dtos/login.company.dto";
 import { ICompanyGoogleLoginUsecase } from "../interfaces/auth/ICompanyGoogleLoginUsecase";
 
 export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{

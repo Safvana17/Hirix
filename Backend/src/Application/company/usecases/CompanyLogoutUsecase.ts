@@ -1,4 +1,4 @@
-import ICompanyRepository from "../../../Domain/repositoryInterface/ICompanyRepository";
+import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
 import { IHashService } from "../../interface/service/IHashService";
 import { ICompanyLogoutUsecase } from "../interfaces/auth/ICompanyLogoutUsecase";
 

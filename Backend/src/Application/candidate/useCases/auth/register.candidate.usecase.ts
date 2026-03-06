@@ -1,12 +1,12 @@
 import candidateEntity from "../../../../Domain/entities/candidate.entity";
-import ICandidateRepository from "../../../../Domain/repositoryInterface/ICandidateRepository";
-import { RegisterCandidateInputDTO, RegisterCandidateOutputDTO } from "../../dtos/RegisterCandidateDTO";
+import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
+import { RegisterCandidateInputDTO, RegisterCandidateOutputDTO } from "../../dtos/register.candidate.dto";
 import { IOtpService } from "../../../interface/service/IOtpService"
 import { IHashService } from "../../../interface/service/IHashService"
 import { IMailService } from "../../../interface/service/IMailService";
 import { IOtpStore } from "../../../interface/service/IOtpStore";
 import { ICandidateRegisterUsecase } from "../../interfaces/auth/ICandidateRegisterUsecase";
-import { AppError } from "../../../../Domain/errors/AppError";
+import { AppError } from "../../../../Domain/errors/app.error";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 

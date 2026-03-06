@@ -1,5 +1,5 @@
 import CompanyEntity from "../entities/company.entity";
-import { IBaseRepository } from "./IBaseRepository";
+import { IBaseRepository } from "./iBase.repository";
 
 export default interface ICompanyRepository extends IBaseRepository <CompanyEntity> {
     findByEmail(email: string): Promise<CompanyEntity | null>;

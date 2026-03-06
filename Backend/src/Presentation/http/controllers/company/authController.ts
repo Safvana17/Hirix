@@ -8,17 +8,14 @@ import { IVerifyRegisterCompanyUsecase } from "../../../../Application/company/i
 import { VerifyCompanyInputDTO } from "../../../../Application/company/dtos/VerifyCompanyDTO";
 import { ResendOtpCompanyInputDTO } from "../../../../Application/company/dtos/ResendOtpCompanyDTO";
 import { IResendOtpCompanyUsecase } from "../../../../Application/company/interfaces/auth/IResendOtpUsecase";
-import { googleLoginSchema, loginSchema, refreshTokenSchema } from "../../validators/loginValidator";
+import { googleLoginSchema, loginSchema } from "../../validators/loginValidator";
 import { LoginCompanyInputDTO } from "../../../../Application/company/dtos/LoginCompanyDTO";
 import { ILoginCompanyUsecase } from "../../../../Application/company/interfaces/auth/ILoginCompanyUsecase";
 import { ICompanyForgotPasswordUsecase } from "../../../../Application/company/interfaces/auth/ICompanyForgotPasswordUsecase";
 import { ICompanyResetPasswordUsecase } from "../../../../Application/company/interfaces/auth/ICompanyResetPasswordUsecase";
-import { ICompanyRefreshTokenUsecase } from "../../../../Application/company/interfaces/auth/ICompanyRefreshTokenUsecase";
 import { CompanyForgotPasswordInputDTO } from "../../../../Application/company/dtos/CompanyForgotPasswordDTO";
 import { CompanyResetPasswordInputDTO } from "../../../../Application/company/dtos/CompanyResetPasswordDTO";
-import { CompanyRefreshTokenInputDTO } from "../../../../Application/company/dtos/CompanyRefreshTokenDTO";
 import { env } from "../../../../Infrastructure/config/env";
-import { ICompanyLogoutUsecase } from "../../../../Application/company/interfaces/auth/ICompanyLogoutUsecase";
 import { ICompanyGoogleLoginUsecase } from "../../../../Application/company/interfaces/auth/ICompanyGoogleLoginUsecase";
 import userRole from "../../../../Domain/enums/userRole.enum";
 
@@ -30,8 +27,6 @@ export class CompanyAuthController {
         private _loginCompanyUsecase: ILoginCompanyUsecase,
         private _companyForgotPasswordUsecase: ICompanyForgotPasswordUsecase,
         private _companyResetPasswordUsecase: ICompanyResetPasswordUsecase,
-        private _companyRefreshTokenUsecase: ICompanyRefreshTokenUsecase,
-        private _companyLogoutUsecase: ICompanyLogoutUsecase,
         private _companyGoogleLogin: ICompanyGoogleLoginUsecase,
     ) {}
 
@@ -173,68 +168,68 @@ export class CompanyAuthController {
         }
     }
 
-    refreshToken = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const parsed = refreshTokenSchema.parse(req.body)
-            const payload: CompanyRefreshTokenInputDTO = {
-                token: parsed.token
-            }
+//     refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+//         try {
+//             const parsed = refreshTokenSchema.parse(req.body)
+//             const payload: CompanyRefreshTokenInputDTO = {
+//                 token: parsed.token
+//             }
 
-            const tokens = this._companyRefreshTokenUsecase.execute(payload)
+//             const tokens = this._companyRefreshTokenUsecase.execute(payload)
 
-            res.cookie('refreshToken', (await tokens).refreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: process.env.NODE_ENV ==='production' ? 'none' : 'lax',
-                maxAge: env.REFRESH_TOKEN_MAX_AGE,
-                path: '/'
-            })
+//             res.cookie('refreshToken', (await tokens).refreshToken, {
+//                 httpOnly: true,
+//                 secure: process.env.NODE_ENV === 'production',
+//                 sameSite: process.env.NODE_ENV ==='production' ? 'none' : 'lax',
+//                 maxAge: env.REFRESH_TOKEN_MAX_AGE,
+//                 path: '/'
+//             })
 
-            res.cookie('accessToken', (await tokens).accessToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                maxAge: env.ACCESS_TOKEN_MAX_AGE,
-                path: '/'
-            })
+//             res.cookie('accessToken', (await tokens).accessToken, {
+//                 httpOnly: true,
+//                 secure: process.env.NODE_ENV === 'production',
+//                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+//                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
+//                 path: '/'
+//             })
 
-            return res.status(statusCode.OK).json({
-                success: true,
-                message: authMessages.success.TOKEN_REFRESHED
-            })
+//             return res.status(statusCode.OK).json({
+//                 success: true,
+//                 message: authMessages.success.TOKEN_REFRESHED
+//             })
 
-        } catch (error) {
-            next(error)
-        }
-    }
+//         } catch (error) {
+//             next(error)
+//         }
+//     }
 
-logout = async (req: Request, res: Response, next: NextFunction) => {
-        try {
+// logout = async (req: Request, res: Response, next: NextFunction) => {
+//         try {
             
-            const refreshToken = req.cookies.refershToken
-            await this._companyLogoutUsecase.execute(refreshToken)
+//             const refreshToken = req.cookies.refershToken
+//             await this._companyLogoutUsecase.execute(refreshToken)
 
-            res.clearCookie('refreshToken', {
-                httpOnly: true,
-                sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
-                secure: process.env.NODE_ENV === 'production'
-            })
+//             res.clearCookie('refreshToken', {
+//                 httpOnly: true,
+//                 sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
+//                 secure: process.env.NODE_ENV === 'production'
+//             })
 
-            res.clearCookie('accessToken', {
-                httpOnly: true,
-                sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
-                secure: process.env.NODE_ENV === 'production'
-            })
+//             res.clearCookie('accessToken', {
+//                 httpOnly: true,
+//                 sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
+//                 secure: process.env.NODE_ENV === 'production'
+//             })
 
-            return res.status(statusCode.NO_CONTENT).json({
-                success: true,
-                message: authMessages.success.CANDIDATE_LOGGEDOUT_SUCCESS
-            })
+//             return res.status(statusCode.NO_CONTENT).json({
+//                 success: true,
+//                 message: authMessages.success.CANDIDATE_LOGGEDOUT_SUCCESS
+//             })
             
-        } catch (error) {
-            next(error)
-        }
-    }
+//         } catch (error) {
+//             next(error)
+//         }
+//     }
 
     googleLogin = async (req: Request, res: Response, next: NextFunction) => {
         try {

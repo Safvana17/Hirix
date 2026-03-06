@@ -1,6 +1,6 @@
-import IAdminRepository from "../../../Domain/repositoryInterface/IAdminRepository";
-import { IAdminLogoutUsecase } from "../interfaces/IAdminLogoutUsecase";
-import { IHashService } from "../../interface/service/IHashService";
+import IAdminRepository from "../../../../Domain/repositoryInterface/IAdminRepository";
+import { IAdminLogoutUsecase } from "../../interfaces/auth/IAdminLogoutUsecase";
+import { IHashService } from "../../../interface/service/IHashService";
 
 export class AdminLogoutUsecase implements IAdminLogoutUsecase{
     constructor(

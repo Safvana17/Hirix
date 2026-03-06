@@ -42,7 +42,7 @@ export class RefreshTokenUsecase implements IRefreshTokenUsecase {
             role: candidate.getRole()
         })
 
-        const newRefereshToken = this._tokenService.generateRefreshToken({id: candidateId})
+        const newRefereshToken = this._tokenService.generateRefreshToken({id: candidateId, role: candidate.getRole()})
         const hashedRefreshToken = this._hashService.hashToken(newRefereshToken)
         await this._candidateRepository.updateToken(candidateId, hashedRefreshToken)
 

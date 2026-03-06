@@ -1,12 +1,14 @@
+import userRole from "../../../Domain/enums/userRole.enum";
 
 export interface AccessTokenPayload { 
     id: string;
     email: string;
-    role: string
+    role: userRole
 }
 
 export interface RefreshTokenPayload {
     id: string;
+    role: userRole
 }
 
 

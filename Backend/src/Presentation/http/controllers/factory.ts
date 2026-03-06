@@ -11,7 +11,6 @@ import { VerifyRegisterCandidateOtpUsecase } from "../../../Application/candidat
 import { ForgotPasswordUsecase  } from "../../../Application/candidate/useCases/auth/ForgotPasswordUsecase";
 import { ResetPasswordUsecase } from "../../../Application/candidate/useCases/auth/ResetPasswordUsecase";
 import { LoginCandidateUsecase } from "../../../Application/candidate/useCases/auth/LoginCandidateUsecase";
-import { RefreshTokenUsecase } from "../../../Application/candidate/useCases/auth/RefreshTokenUsecase";
 import { ResendOtpUsecase } from "../../../Application/candidate/useCases/auth/ResendOtpUsecase";
 import { RegisterCompanyUsecase } from "../../../Application/company/usecases/RegisterCompanyUsecase";
 import { VerifyRegisterCompanyUsecase } from "../../../Application/company/usecases/VerifyCompanyUsecase";
@@ -19,20 +18,18 @@ import { ResendOtpCompanyUsecase } from "../../../Application/company/usecases/R
 import { LoginCompanyUsecase } from "../../../Application/company/usecases/LoginCompanyUsecase";
 import { CompanyForgotPasswordUsecase } from "../../../Application/company/usecases/CompanyForgotPasswordUsecase";
 import { CompanyResetPasswordUsecase } from "../../../Application/company/usecases/CompanyResetPasswordUsecase";
-import { CompanyRefreshTokenUsecase } from "../../../Application/company/usecases/CompanyRefreshTokenUsecase";
-import { AdminLogoutUsecase } from "../../../Application/admin/usecases/admin.logout.usecase";
-import { CandidateLogoutUsecase } from "../../../Application/candidate/useCases/auth/CandidateLogoutUsecase";
-import { CompanyLogoutUsecase } from "../../../Application/company/usecases/CompanyLogoutUsecase";
 import { CandidateGoogleLoginUsecase } from "../../../Application/candidate/useCases/auth/GoogleLoginUsecase";
 import { CompanyGoogleLoginUsecase } from "../../../Application/company/usecases/company.googleLogin.usecase";
 import { UnifiedGetMeUsecase } from "../../../Application/common/usecases/unified.getme.usecase";
+import { UnifiedRefreshTokenUsecase } from "../../../Application/common/usecases/unified.refreshToken.usecase";
+
 
 
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidateRepository";
 import { OtpRepository } from "../../../Infrastructure/services/OtpStore";
-import { AdminLoginUsecase } from "../../../Application/admin/usecases/AdminLoginUsecase";
+import { AdminLoginUsecase } from "../../../Application/admin/usecases/auth/AdminLoginUsecase";
 import { CompanyRepository } from "../../../Infrastructure/repositories/companyRepository";
 import { AdminRepository } from "../../../Infrastructure/repositories/adminRepository";
 
@@ -46,7 +43,7 @@ import { GoogleAuthService } from "../../../Infrastructure/services/GoogleAuthSe
 import userRole from "../../../Domain/enums/userRole.enum";
 import UserEntity from "../../../Domain/entities/user.entity";
 import { IBaseRepository } from "../../../Domain/repositoryInterface/IBaseRepository";
-
+import { UnifiedLogoutUsecase } from "../../../Application/common/usecases/unified.logout.usecase";
 
 
 
@@ -103,16 +100,16 @@ const iResetPassword = new ResetPasswordUsecase(
     iHashService
 )
 
-const iRefreshToken = new RefreshTokenUsecase (
-    iTokenService,
-    iCandidateRepository,
-    iHashService
-)
+// const iRefreshToken = new RefreshTokenUsecase (
+//     iTokenService,
+//     iCandidateRepository,
+//     iHashService
+// )
 
-const iLogoutCandidate = new CandidateLogoutUsecase(
-    iCandidateRepository,
-    iHashService
-)
+// const iLogoutCandidate = new CandidateLogoutUsecase(
+//     iCandidateRepository,
+//     iHashService
+// )
 
 const iCandidateGoogleLogin = new CandidateGoogleLoginUsecase(
     iCandidateRepository,
@@ -165,16 +162,16 @@ const iCompanyResetPassword = new CompanyResetPasswordUsecase(
     iHashService
 )
 
-const iCompanyRefreshToken = new CompanyRefreshTokenUsecase(
-    iCompanyRepository,
-    iTokenService,
-    iHashService
-)
+// const iCompanyRefreshToken = new CompanyRefreshTokenUsecase(
+//     iCompanyRepository,
+//     iTokenService,
+//     iHashService
+// )
 
-const iLogoutCompany = new CompanyLogoutUsecase(
-    iCompanyRepository,
-    iHashService
-)
+// const iLogoutCompany = new CompanyLogoutUsecase(
+//     iCompanyRepository,
+//     iHashService
+// )
 
 const iCompanyGoogleLogin = new CompanyGoogleLoginUsecase(
     iCompanyRepository,
@@ -192,10 +189,16 @@ const iLoginAdmin = new AdminLoginUsecase(
     iTokenService
 )
 
-const iLogoutAdmin = new AdminLogoutUsecase(
-    iAdminRepository,
-    iHashService
-)
+// const iLogoutAdmin = new AdminLogoutUsecase(
+//     iAdminRepository,
+//     iHashService
+// )
+
+// const iAdminRefreshToken = new AdminRefreshTokenUsecase(
+//     iAdminRepository,
+//     iTokenService,
+//     iHashService
+// )
 
 
 
@@ -212,7 +215,23 @@ const iUnifiedGetMe = new UnifiedGetMeUsecase(
     repositoryRegistry
 )
 
-export const iGetMeController = new UnifiedAuthController(iUnifiedGetMe)
+const iUnifiedRefreshToken = new UnifiedRefreshTokenUsecase(
+    repositoryRegistry,
+    iTokenService,
+    iHashService
+)
+const iUnifiedLogout = new UnifiedLogoutUsecase(
+    repositoryRegistry,
+    iHashService,
+    iTokenService
+)
+
+//controller
+export const iUnifiedController = new UnifiedAuthController(
+    iUnifiedGetMe,
+    iUnifiedRefreshToken,
+    iUnifiedLogout
+)
 
 export const iCandidateAuthController = new CandidateAuthController(
     iRegisterCandidate,
@@ -221,8 +240,6 @@ export const iCandidateAuthController = new CandidateAuthController(
     iLoginCandidate,
     iForgotPassword,
     iResetPassword,
-    iRefreshToken,
-    iLogoutCandidate,
     iCandidateGoogleLogin,
 )
 
@@ -233,13 +250,10 @@ export const iCompanyAuthController = new CompanyAuthController(
     iLoginCompany,
     iCompanyForgotPassword,
     iCompanyResetPassword,
-    iCompanyRefreshToken,
-    iLogoutCompany,
     iCompanyGoogleLogin,
   
 )
 
 export const iAdminAuthController = new AdminAuthController(
     iLoginAdmin,
-    iLogoutAdmin,
 )

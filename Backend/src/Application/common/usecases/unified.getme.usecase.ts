@@ -30,12 +30,10 @@ export class UnifiedGetMeUsecase implements IUnifiedGetMeUsecase{
         const id = user.id
         const userId = id!
         return {
-            user: {
                 id: userId,
                 name: user.getName(),
                 email: user.getEmail(),
                 role: user.getRole()
-            }
         }
     }
 }

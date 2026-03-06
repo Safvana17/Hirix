@@ -50,7 +50,7 @@ export class CandidateGoogleLoginUsecase implements IGoogleLoginUsecase{
 
         const id = candidate.getId()
         const candidateId = id!
-        const refreshToken = this._tokenService.generateRefreshToken({id: candidateId})
+        const refreshToken = this._tokenService.generateRefreshToken({id: candidateId, role: candidate.getRole()})
         const accessToken = this._tokenService.generateAccessToken({id: candidateId, email: candidate.getEmail(), role: candidate.getRole()})
 
         const hashedRefreshToken = this._hashService.hashToken(refreshToken)

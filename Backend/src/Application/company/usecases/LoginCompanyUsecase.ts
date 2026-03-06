@@ -30,7 +30,7 @@ export class LoginCompanyUsecase implements ILoginCompanyUsecase{
             throw new AppError(authMessages.error.COMPANY_ID_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
-        const refreshToken =  this._tokenService.generateRefreshToken({id: id})
+        const refreshToken =  this._tokenService.generateRefreshToken({id: id, role: company.getRole()})
         const accessToken = this._tokenService.generateAccessToken({id: id, email: company.getEmail(), role: company.getRole()})
 
         const hashedRefreshToken = this._hashService.hashToken(refreshToken)

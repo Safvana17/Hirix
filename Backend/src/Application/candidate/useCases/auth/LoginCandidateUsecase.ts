@@ -36,7 +36,7 @@ export class LoginCandidateUsecase {
             throw new AppError(authMessages.error.CANDIDATE_ID_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
-        const refreshToken = this._tokenService.generateRefreshToken({id: candidateId})
+        const refreshToken = this._tokenService.generateRefreshToken({id: candidateId, role: candidate.getRole()})
         const accessToken = this._tokenService.generateAccessToken({id: candidateId, email: candidate.getEmail(), role: candidate.getRole()})
 
         const hashedRefreshToken = this._hashService.hashToken(refreshToken)

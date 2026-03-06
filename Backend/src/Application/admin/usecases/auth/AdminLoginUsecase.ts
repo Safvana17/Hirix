@@ -1,11 +1,11 @@
-import { AppError } from "../../../Domain/errors/AppError";
-import IAdminRepository from "../../../Domain/repositoryInterface/IAdminRepository";
-import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
-import { statusCode } from "../../../Shared/Enumes/statusCode";
-import { IHashService } from "../../interface/service/IHashService";
-import { ITokenService } from "../../interface/service/ITokenService";
-import { LoginAdminInputDto, LoginAdminOutputDTO } from "../dtos/LoginAdminDTO";
-import { IAdminLoginUsecase } from "../interfaces/IAdminLoginUsecase";
+import { AppError } from "../../../../Domain/errors/AppError";
+import IAdminRepository from "../../../../Domain/repositoryInterface/IAdminRepository";
+import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IHashService } from "../../../interface/service/IHashService";
+import { ITokenService } from "../../../interface/service/ITokenService";
+import { LoginAdminInputDto, LoginAdminOutputDTO } from "../../dtos/auth/LoginAdminDTO";
+import { IAdminLoginUsecase } from "../../interfaces/auth/IAdminLoginUsecase";
 
 export class AdminLoginUsecase implements IAdminLoginUsecase {
     constructor(
@@ -35,7 +35,7 @@ export class AdminLoginUsecase implements IAdminLoginUsecase {
             throw new AppError(authMessages.error.ADMIN_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
-        const refreshToken = this._tokenService.generateRefreshToken({id: id})
+        const refreshToken = this._tokenService.generateRefreshToken({id: id, role: admin.getRole()})
         const accessToken = this._tokenService.generateAccessToken({id: id, email: admin.getEmail(), role: admin.getRole()})
 
         const hashedRefreshToken = this._hashService.hashToken(refreshToken)

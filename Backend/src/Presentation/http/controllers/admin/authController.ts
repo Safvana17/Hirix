@@ -1,16 +1,15 @@
 import { NextFunction, Request, Response } from "express";
-import { IAdminLoginUsecase } from "../../../../Application/admin/interfaces/IAdminLoginUsecase";
+import { IAdminLoginUsecase } from "../../../../Application/admin/interfaces/auth/IAdminLoginUsecase";
 import { loginSchema } from "../../validators/loginValidator";
-import { LoginAdminInputDto } from "../../../../Application/admin/dtos/LoginAdminDTO";
+import { LoginAdminInputDto } from "../../../../Application/admin/dtos/auth/LoginAdminDTO";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { env } from "../../../../Infrastructure/config/env";
-import { IAdminLogoutUsecase } from "../../../../Application/admin/interfaces/IAdminLogoutUsecase";
+
 
 export class AdminAuthController {
     constructor(
         private _loginUsecase: IAdminLoginUsecase,
-        private _logoutUsecase: IAdminLogoutUsecase,
     ) {}
 
     login = async (req: Request, res: Response, next: NextFunction) => {
@@ -53,30 +52,64 @@ export class AdminAuthController {
         }
     }
 
-    logout = async (req: Request, res: Response, next: NextFunction) => {
-        try {
+    // logout = async (req: Request, res: Response, next: NextFunction) => {
+    //     try {
 
-            const refreshToken = req.cookies?.refershToken
-            await this._logoutUsecase.execute(refreshToken)
-            res.clearCookie('refreshToken', {
-                httpOnly: true,
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                secure: process.env.NODE_ENV === 'production',
-            })
+    //         const refreshToken = req.cookies?.refershToken
+    //         await this._logoutUsecase.execute(refreshToken)
+    //         res.clearCookie('refreshToken', {
+    //             httpOnly: true,
+    //             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    //             secure: process.env.NODE_ENV === 'production',
+    //         })
 
-            res.clearCookie('accessToken', {
-                httpOnly: true,
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                secure: process.env.NODE_ENV === 'production'
-            })
-            return res.status(statusCode.NO_CONTENT).json({
-                success: true,
-                message: authMessages.success.ADMIN_LOGOUT_SUCCESS
-            })
+    //         res.clearCookie('accessToken', {
+    //             httpOnly: true,
+    //             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    //             secure: process.env.NODE_ENV === 'production'
+    //         })
+    //         return res.status(statusCode.NO_CONTENT).json({
+    //             success: true,
+    //             message: authMessages.success.ADMIN_LOGOUT_SUCCESS
+    //         })
 
-        } catch (error) {
-            next(error)
-        }
-    }
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
+    // refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+    //     try {
+    //         const parsed = refreshTokenSchema.parse(req.body)
+    //         const payload: AdminRefreshTokenInputDTO = {
+    //             token: parsed.token
+    //         }
+
+    //         const tokens = this._refreshTokenUsecase.execute(payload)
+        
+    //         res.cookie('refreshToken', (await tokens).refreshToken, {
+    //             httpOnly: true,
+    //             secure: process.env.NODE_ENV === 'production',
+    //             sameSite: process.env.NODE_ENV ==='production' ? 'none' : 'lax',
+    //             maxAge: env.REFRESH_TOKEN_MAX_AGE,
+    //             path: '/'
+    //         })
+
+    //         res.cookie('accessToken', (await tokens).accessToken, {
+    //             httpOnly: true,
+    //             secure: process.env.NODE_ENV === 'production',
+    //             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    //             maxAge: env.ACCESS_TOKEN_MAX_AGE,
+    //             path: '/'
+    //         })
+
+    //         return res.status(statusCode.OK).json({
+    //             success: true,
+    //             message: authMessages.success.TOKEN_REFRESHED
+    //         })
+
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
 }
 

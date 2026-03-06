@@ -6,7 +6,7 @@ import { IVerifyRegisterCandidate } from "../../../../Application/candidate/inte
 import { RegisterCandidateInputDTO } from "../../../../Application/candidate/dtos/RegisterCandidateDTO";
 import { forgotPasswordSchema, otpSchema, registerSchema, resendOtpSchema, resetPasswordSchema } from "../../validators/registerValidator";
 import { verifyRegisterCandidateOtpInputDTO } from "../../../../Application/candidate/dtos/VerifyRegisterCandidateOtpDTO";
-import { googleLoginSchema, loginSchema, refreshTokenSchema } from "../../validators/loginValidator";
+import { googleLoginSchema, loginSchema } from "../../validators/loginValidator";
 import { LoginCandidateInputDTO } from "../../../../Application/candidate/dtos/LoginCandidateDTO";
 import { ICandidateLoginUsecase } from "../../../../Application/candidate/interfaces/auth/ICandidateLoginUsecase";
 import { IResendOtpUsecase } from "../../../../Application/candidate/interfaces/auth/IResendOtpUsecase";
@@ -15,12 +15,10 @@ import { IForgotPasswordUsecase } from "../../../../Application/candidate/interf
 import { IResetPasswordUsecase } from "../../../../Application/candidate/interfaces/auth/IResetPasswordUsecase";
 import { ForgotPasswordInputDTO } from "../../../../Application/candidate/dtos/ForgotPasswordDTO";
 import { ResetPasswordInputDTO } from "../../../../Application/candidate/dtos/ResetPasswordDTO";
-import { IRefreshTokenUsecase } from "../../../../Application/candidate/interfaces/auth/IRefreshTokenUsecase";
-import { RefreshTokenInputDTO } from "../../../../Application/candidate/dtos/RefreshTokenDTO";
 import { env } from "../../../../Infrastructure/config/env";
-import { ICandidateLogoutUsecase } from "../../../../Application/candidate/interfaces/auth/ICandidateLogoutUsecase";
 import { IGoogleLoginUsecase } from "../../../../Application/candidate/interfaces/auth/IGoogleLoginUsecase";
 import userRole from "../../../../Domain/enums/userRole.enum";
+import { logger } from "../../../../utils/logging/loger";
 
 
 
@@ -32,8 +30,6 @@ export class CandidateAuthController {
         private _loginUsecase: ICandidateLoginUsecase,
         private _forgotPasswordUsecase: IForgotPasswordUsecase,
         private _resetPasswordUsecase: IResetPasswordUsecase,
-        private _refreshTokenUsecase: IRefreshTokenUsecase,
-        private _logoutUsecase: ICandidateLogoutUsecase,
         private _gooleLoginUsecase: IGoogleLoginUsecase,
     ) {}
 
@@ -112,7 +108,8 @@ export class CandidateAuthController {
             // const hashedToken = this._hashService.hashToken(refreshToken)
             // await this._candidateRepository.updateToken(candidate.id, hashedToken)
 
-            res.cookie('refershToken', refreshToken, {
+            logger.info(`env: ${process.env.NODE_ENV}`)
+            res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
@@ -177,69 +174,69 @@ export class CandidateAuthController {
         }
     }
 
-    refreshToken = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const parsed = refreshTokenSchema.parse(req.body)
-            const payload: RefreshTokenInputDTO = {
-                token: parsed.token
-            }
+    // refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+    //     try {
+    //         const parsed = refreshTokenSchema.parse(req.body)
+    //         const payload: RefreshTokenInputDTO = {
+    //             token: parsed.token
+    //         }
 
-            const tokens = this._refreshTokenUsecase.execute(payload)
+    //         const tokens = this._refreshTokenUsecase.execute(payload)
         
-            res.cookie('refreshToken', (await tokens).refreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: process.env.NODE_ENV ==='production' ? 'none' : 'lax',
-                maxAge: env.REFRESH_TOKEN_MAX_AGE,
-                path: '/'
-            })
+    //         res.cookie('refreshToken', (await tokens).refreshToken, {
+    //             httpOnly: true,
+    //             secure: process.env.NODE_ENV === 'production',
+    //             sameSite: process.env.NODE_ENV ==='production' ? 'none' : 'lax',
+    //             maxAge: env.REFRESH_TOKEN_MAX_AGE,
+    //             path: '/'
+    //         })
 
-            res.cookie('accessToken', (await tokens).accessToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                maxAge: env.ACCESS_TOKEN_MAX_AGE,
-                path: '/'
-            })
+    //         res.cookie('accessToken', (await tokens).accessToken, {
+    //             httpOnly: true,
+    //             secure: process.env.NODE_ENV === 'production',
+    //             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    //             maxAge: env.ACCESS_TOKEN_MAX_AGE,
+    //             path: '/'
+    //         })
 
-            return res.status(statusCode.OK).json({
-                success: true,
-                message: authMessages.success.TOKEN_REFRESHED
-            })
+    //         return res.status(statusCode.OK).json({
+    //             success: true,
+    //             message: authMessages.success.TOKEN_REFRESHED
+    //         })
 
 
-        } catch (error) {
-            next(error)
-        }
-    }
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
 
-    logout = async (req: Request, res: Response, next: NextFunction) => {
-        try {
+    // logout = async (req: Request, res: Response, next: NextFunction) => {
+    //     try {
             
-            const refreshToken = req.cookies.refershToken
-            await this._logoutUsecase.execute(refreshToken)
+    //         const refreshToken = req.cookies.refershToken
+    //         await this._logoutUsecase.execute(refreshToken)
 
-            res.clearCookie('refreshToken', {
-                httpOnly: true,
-                sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
-                secure: process.env.NODE_ENV === 'production'
-            })
+    //         res.clearCookie('refreshToken', {
+    //             httpOnly: true,
+    //             sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
+    //             secure: process.env.NODE_ENV === 'production'
+    //         })
 
-            res.clearCookie('accessToken', {
-                httpOnly: true,
-                sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
-                secure: process.env.NODE_ENV === 'production'
-            })
+    //         res.clearCookie('accessToken', {
+    //             httpOnly: true,
+    //             sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
+    //             secure: process.env.NODE_ENV === 'production'
+    //         })
 
-            return res.status(statusCode.NO_CONTENT).json({
-                success: true,
-                message: authMessages.success.CANDIDATE_LOGGEDOUT_SUCCESS
-            })
+    //         return res.status(statusCode.NO_CONTENT).json({
+    //             success: true,
+    //             message: authMessages.success.CANDIDATE_LOGGEDOUT_SUCCESS
+    //         })
             
-        } catch (error) {
-            next(error)
-        }
-    }
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
     googleLogin = async (req: Request, res: Response, next: NextFunction) =>{
         try {
            const parsed = googleLoginSchema.parse(req.body)

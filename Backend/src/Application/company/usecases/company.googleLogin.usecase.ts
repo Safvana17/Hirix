@@ -47,7 +47,7 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
         const id = company.getId()
         const companyId = id!
 
-        const refreshToken = this._tokenService.generateRefreshToken({id: companyId})
+        const refreshToken = this._tokenService.generateRefreshToken({id: companyId, role: company.getRole()})
         const accessToken = this._tokenService.generateAccessToken({id: companyId, email: company.getEmail(), role: company.getRole()})
 
         const hashedRefreshToken = this._hashService.hashToken(refreshToken)

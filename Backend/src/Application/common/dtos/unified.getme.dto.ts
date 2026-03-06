@@ -6,10 +6,8 @@ export interface UnifiedGetMeInputDTO {
 }
 
 export interface UnifiedGetMeOutputDTO {
-    user: {
         id: string
         name: string;
         email: string;
         role: userRole
-    }
 }

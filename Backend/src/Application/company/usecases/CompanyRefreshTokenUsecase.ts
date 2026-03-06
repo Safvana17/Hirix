@@ -37,7 +37,7 @@ export class CompanyRefreshTokenUsecase implements ICompanyRefreshTokenUsecase{
             role: company.getRole()
         })
 
-        const newRefereshToken = this._tokenService.generateRefreshToken({id: companyId})
+        const newRefereshToken = this._tokenService.generateRefreshToken({id: companyId, role: company.getRole()})
         const hashedRefreshToken = this._hashService.hashToken(newRefereshToken)
         await this._companyRepository.updateToken(companyId, hashedRefreshToken)
 
